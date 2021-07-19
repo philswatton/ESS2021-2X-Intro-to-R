@@ -1,48 +1,86 @@
-# Course:                     Introduction to R
-# University:                 University of Essex
-#                             Essex Summer School in Social Science Data Analysis
-# File description:           Introduces R and its basic functions
-# Instructor and programmer:  Lorenzo Crippa
-# Date:                       Sunday 11th July 2021,  12-6pm
+# Essex Summer School in Social Science Data Analysis
+# 2X Introduction to R
+# Phil Swatton
+# Modified from 1X Introduction to R files by Lorenzo Crippa
+# Sunday 23rd July 2021, 11am-5pm BST
+# File 01: data types, data structures, using functions
 
-# INTRODUCTION ----
 
-# print("hello world!")
 
-# Welcome to R! This is a comment: whatever follows the symbol # will not be executed by R.
-# You can (and should) use comments to document your code and make it understandable by other users
-# and to avoid running lines of code that you don't want your program to run.
 
-# Today we're going to:
-# 1) learn how to create objects in R and learn about the most common types of R objects
-# 2) learn how to import and manage databases
-# 3) learn how to obtain summary stats and plots using base R
-# 4) learn how to perform basic statistical analyses
+# 1 Introduction  ----
 
-# 1) R DATA TYPES AND OBJECTS #----
+# First things first: text proceeded by a hashtag in R is a comment. If you 
+# run a comment through R, it will ignore it! This is useful for helping both
+# other people AND your future self in 6 months' time understand what your code
+# was supposed to be doing.
 
-## 1.1 R Data types ----
+# To run a piece of code in an R script, move your cursor to that line and press
+# ctrl+enter (cmd+enter for Mac):
+2 + 2
 
-# We mainly use R to work with data. What are the main types of data we will deal with?
+# You can also click the 'run' button at the top-right of the R script:
+2 - 1
 
-# Data can be
-# 1. Numbers:
+# To run a specific selection of code, or multiple unrelated lines, highlight
+# them and then run them as normal:
+3 * 5
+20 / 10
+
+# Note that running lines with ctrl+enter/cmd+enter/clicking 'run' skips comments:
+2 * 10
+# this will be ignored!
+2 / 10
+
+# ALWAYS (with one exception) do your work in R files - this ensures that you
+# and others can replicate your steps
+
+# Some other useful keyboard shortcuts in RStudio:
+# ctrl+z (cmd+z for Mac): undo
+# ctrl+s (cmd+s for Mac): save
+# ctrl+shift+c (cmd+shift+s for Mac): comment/uncomment current/highlighted lines
+
+
+
+
+## 1.1 R Data Types ----
+
+# There are four main data types in R. We'll go over the first three now, and 
+# talk about the last one later.
+
+# 1) Numbers
 0
 1.5
 3/4
 pi
+2e+10
 
-# 2. Strings:
-"Whatever"
-"I'm"
-"writing"
-"now"
+# 2) Strings
+"abc"
+"hello, world!"
+'notice Strings can use double or single quotes'
+"strings can also contain hastags without a problem #"
+# "but a hastag BEFORE the quotes will mean it's a comment"
+"you can include single quotes in side a double-quotes string: ' "
+'or double quotes inside a single-quotes string: " '
+"or you can use a backslash to include the same kind of quotes in the same kind of string: \" "
+'as above: \' '
 
-# 3. Categories: [England, Scotland, Wales, Northern Ireland]
-
-# 4. Logical:
+# 3) Logical:
 TRUE
 FALSE
+
+# 4) Categories: [England, Scotland, Wales, Northern Ireland]
+# We'll talk about this one in a bit
+
+# 5) Special cases
+# Not really a data type in their own right, but can be important:
+NA # missing data - the most important for today's purposes
+NaN # not a number - will only happen if something has gone wrong!
+NULL # basically an undefined value - there's nothing there (not even missing data!)
+
+
+
 
 ## 1.2 Creating objects ----
 
