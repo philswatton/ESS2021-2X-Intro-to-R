@@ -1,0 +1,80 @@
+---
+title: "2X: Introduction to R"
+author: "Phil Swatton"
+# date: "19/07/2021"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# R Markdown
+
+Welcome to 2X Intro to R!
+
+I'm Phil, a PhD student in the Department of Government at the University of Essex. Today, we'll be learning how to use R(but you knew that already).
+
+I'll be in an R & Stata tech support/helpdesk role throughout the second session of ESS, so feel free to get in touch throughout the next two weeks with any R/Stata tech issues you're having.
+
+
+
+
+# Goals for today
+
+- Cover the main basics:
+    - Understand what R is
+    - Understand what RStudio is
+    - Data types and structures in R
+    - Manipulating data in R
+    - Basic statistics and plotting in R
+- Be ready for using R in ESS
+- Be ready for using R in your own work
+- Able to find what you need for yourself
+
+
+
+
+# Class structure
+
+1. Using RStudio, data types, data structures
+2. Importing datasets, manipulating data
+3. Descriptive statistics, plots
+4. Statistical tests and models
+
+Each section will be about an hour to an hour and a half long. Each section will include a set of exercises so you can practice what we've learned.
+
+I'm not necessarily expecting you to finish today - it's okay if you don't! I will be uploading a solutions sheet to the Box folder later (though I encourage you to try the exercises before looking at it!) and as above will be available for contact throughout the second session of ESS.
+
+
+
+# What is R?
+
+
+
+
+# What is RStudio?
+
+Let's open it up and find out...
+
+
+
+
+# Questions before we begin?
+
+
+
+
+# Some R package reccomendations
+
+
+
+
+# Questions before we finish?
+
+
+
+
+
+
+
