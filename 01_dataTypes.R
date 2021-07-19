@@ -48,12 +48,12 @@
 # There are four main data types in R. We'll go over the first three now, and 
 # talk about the last one later.
 
-# 1) Numbers
+# 1) Numbers (we've seen these already)
 0
 1.5
-3/4
-pi
-2e+10
+3 / 4
+pi # pi is coded in, should you ever need it
+2e+10 # R can handle some pretty big numbers!
 
 # 2) Strings
 "abc"
@@ -61,10 +61,10 @@ pi
 'notice Strings can use double or single quotes'
 "strings can also contain hastags without a problem #"
 # "but a hastag BEFORE the quotes will mean it's a comment"
-"you can include single quotes in side a double-quotes string: ' "
-'or double quotes inside a single-quotes string: " '
-"or you can use a backslash to include the same kind of quotes in the same kind of string: \" "
-'as above: \' '
+"you can include single quotes in side a double-quotes string: it's "
+'or double quotes inside a single-quotes string: "hello!" '
+"or you can use a backslash to include the same kind of quotes in the same kind of string: \"hello!\""
+'as above: it\'s' # if you forget the backslash, bad things will happen
 
 # 3) Logical:
 TRUE
