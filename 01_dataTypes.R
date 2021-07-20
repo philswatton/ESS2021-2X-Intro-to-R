@@ -51,7 +51,7 @@
 # 1) Numbers (we've seen these already)
 0
 1.5
-3 / 4
+3 ^ 4 # this would be 3 to the power of 4. 3^2 would be 3 squared, etc
 pi # pi is coded in, should you ever need it
 2e+10 # R can handle some pretty big numbers!
 
@@ -82,65 +82,133 @@ NULL # basically an undefined value - there's nothing there (not even missing da
 
 
 
-## 1.2 Creating objects ----
+## 1.2 Creating and assigning objects ----
 
-# Data types can be contained in R objects.
+# In R (and other programming languages), it's useful to be able to access the
+# same value again and again.
 
-# A number is an object, a dataset is an object, a plot is an object, a function too is an object.
-# The environment in R can take multiple objects at the same time.
+# So, we store data in *objects*, so we can keep accessing it (and to avoid using
+# the wrong value later on!)
 
-# In R we make vast use of the <- operator to assign values to objects. 
-# In RStudio you can obtain the operator quickly by typing the "alt" + "-" keys together.
+# To assign something to an object in R, we use an arrow: <-
+# The name we want to give the object goes on the left-hand side, the data we want
+# to assign to it on the right-hand side:
 
-# For instance:
 a <- 2
-# If you run this code ("ctrl" or "cmd" + "enter" to do it quickly) you'll see that you've assigned
-# the value "2" to the object a. We can ask R to show us the content of an object:
+
+# The above code assigns the value of '2' to an object called a
+# Notice that a is now in our *global environment* in the top-right part of 
+# RStudio (unless you've changed your settings)
+
+# Notice also that this time, the value of 2 didn't paste to our console like
+# before!
+
+# We can access the contents of a by running it as code:
+
 a
 
-b <- 5
-a*b # the program returns the product of a and b, 10.
-a+b
-a-b
+# The name of 'a' is arbitrary. With a few limits (like not using NULL as a
+# name, and not using spaces in the name), we can name objects whatever we want:
 
-# notice this:
-a + b == 8 # this is a statement, and it means: a + b equals 8. Is it 8? No! Then it's FALSE, or F
-a + b != 8 # this means: a + b is not equal to 8. This is TRUE, or T
+banana <- 10
+banana
 
-# you can perform operations by using objects or numbers:
-2*5
-2^4
-a^b
-2^b
-2^(-b*a)
-sqrt(2) # squared root of 2
-sqrt(b)
-sqrt(-b*a) # squared root of a negative number: it is not a real number!
+# Most importantly, we can use objects in operations:
 
-# and we can also ask for more complicated objects:
-log(b) # the natural logarithm of b
-log(b, base = 10) # logarithm of b, base 10
-log(b+1) # natural logarithm of b+1
-exp(a) # e^a
+a * banana
+a + banana
 
-# of course you can store those results in objects
-my.object <- exp(b)
+# Note that objects in R are *mutable*. This means we can overwrite them:
 
-# notice that you can also use the "=" to assign values to objects
-a = 2*5 + sqrt(3) - pi
-# yet, the "=" is also used to specify options and parameters in functions 
-# (more on this below), so we prefer using the <- operator to assign values
+a <- 5
+a * banana
+a + banana
 
-# when you work in R you have three best friends:
-# first, the help files and documentations for each function in each package.
-# Whenever you're in doubt on a function, just type ? and your function to get help:
-?exp()
-# or simply look within the pdf that is associated with each package in CRAN.
-# your other two best friends when working in R are Stack Overflow and Google.
+# So be careful - only overwrite when you're sure you want to!
 
-## 1.3 Types of objects ----
 
-# There are many types of objects in R. Today we focus our attention on:
+
+
+## 1.3 Functions ----
+
+# You may have noticed that so far we've seen the following math operators:
+# * / + - ^ (multiplication, division, addition, subtraction, exponentiation)
+
+# But how do we get the square root of something?
+# We use the sqrt() function:
+
+sqrt(4)
+
+# The real power of R is in its functions. Both base R and many packages (we'll
+# get onto these in a bit) have many useful functions for us to use.
+
+
+# The trick of course is in learning how to understand and find functions.
+# The best place to begin (if you know a function's name) is by putting a question
+# mark before it, dropping the parentheses and running it:
+
+?sqrt
+
+# As you can see, this opens the function's documentation inthe *help* pane
+# in the bottom-right of RStudio. These documents can be a little daunting sometimes,
+# but you'll get used to them. The most important parts are:
+
+# Usage - this shows us what order the arguments are in and what defaults if any 
+# there are
+
+# Arguments - these tell us what *inputs* the function is expecting
+
+# Value - this tells us what *output* we expect from the function - note that sqrt()'s
+# documentation doesn't have the value header but DOES describe the output under details
+
+# Many documentations also include examples at the bottom.
+
+
+
+# That may have been a lot - let's look at another example:
+
+?log
+
+# notice for log() we have TWO arguments. The first is our input (x), the second
+# is the base of the logarithm. Notice that the default is that we use the natural
+# logarithm.
+
+# If there is a default argument, R will use this UNLESS you overwrite it!
+
+# To take the base 10 logarithm of the number 2:
+
+log(2, 10)
+
+# Notice that we don't need to explicitly name arguments. If we don't name our
+# arguments, R will assume that we're giving them in the order listed in
+# the 'usage' section of the documentation.
+
+
+
+# Notice also that we can 'chain' functions together:
+log(sqrt(4), 10)# gives exactly the same as the above as sqrt(4) = 2
+
+# The evaluation order for R is inside to outside. In other words, R will
+# evaluate the function on the inside, and not the one on the outside.
+
+
+
+# If you don't know the name of a function or want to find one, google is your
+# best friend. A big chunk of getting good at R is going to be getting good at 
+# finding what you need via google.
+
+# For example, to find the exponential function:
+# https://www.google.com/search?q=r+exponential+function&oq=R+exponential+function&aqs=chrome.0.0l2j0i22i30l4j69i60l2.3764j0j4&sourceid=chrome&ie=UTF-8
+
+
+
+
+## 1.4 Data Structures ----
+
+# It's not very useful to use just one value on its own a time!
+# We can store lots of data in larger *data structures*.
+
+# There are four main data structures you're likely to see in R. These are:
 # 1) vectors
 # 2) matrixes (2-dimensional vectors)
 # 3) data frames
@@ -156,7 +224,16 @@ a = 2*5 + sqrt(3) - pi
 # Two dimensions |	Matrixes	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
-### 1.3.1 vectors ----
+
+
+
+### 1.4.1 vectors ----
+
+#	               | Homogeneous |	Heterogeneous |
+# ---------------+-------------+----------------+
+# One dimension  |	 Vectors   |	    Lists     |
+# Two dimensions |	Matrixes	 |	 Data frames  |
+# ---------------+-------------+----------------+
 
 # Vectors are one-dimensional objects that can have different lengths and can
 # contain different values, but all of the same nature (all numeric, all characters, all logical...)
@@ -214,7 +291,10 @@ class(category)
 class(a.string.vector)
 class(my.first.vector)
 
-### 1.3.2 matrixes ----
+
+
+
+### 1.4.2 matrixes ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -282,7 +362,10 @@ rm(list = ls())
 # it's always safest to start your R script clearing everything, so 
 # that line of code should always be on top of your project.
 
-### 1.3.3 data frames ----
+
+
+
+### 1.4.3 data frames ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -347,7 +430,11 @@ df$var2[2]
 # we can also change values of course!
 datafr$var3[4] <- 3.79812312
 
-### 1.3.4 lists ----
+
+
+
+
+### 1.4.4 lists ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
