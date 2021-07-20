@@ -66,9 +66,12 @@ pi # pi is coded in, should you ever need it
 "or you can use a backslash to include the same kind of quotes in the same kind of string: \"hello!\""
 'as above: it\'s' # if you forget the backslash, bad things will happen
 
-# 3) Logical:
+# 3) Logical (MUST be capitalised):
 TRUE
 FALSE
+# Notice we can just use T or F
+T
+F
 
 # 4) Categories: [England, Scotland, Wales, Northern Ireland]
 # We'll talk about this one in a bit
@@ -129,7 +132,7 @@ a + banana
 
 
 
-## 1.3 Functions ----
+## 1.3 Using Functions ----
 
 # You may have noticed that so far we've seen the following math operators:
 # * / + - ^ (multiplication, division, addition, subtraction, exponentiation)
@@ -202,6 +205,16 @@ log(sqrt(4), 10)# gives exactly the same as the above as sqrt(4) = 2
 
 
 
+# Let's try one more before we move on:
+?paste
+paste("This", "is", "a", "full", "sentence")
+
+# Notice the "..." in the arguments. This means we can give it as many inputs as
+# we want, BUT we'll need to *explicity* name any further arguments:
+paste("This", "is", "a", "full", "sentence", sep="-")
+
+
+
 
 ## 1.4 Data Structures ----
 
@@ -221,7 +234,7 @@ log(sqrt(4), 10)# gives exactly the same as the above as sqrt(4) = 2
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
 # One dimension  |	 Vectors   |	    Lists     |
-# Two dimensions |	Matrixes	 |	 Data frames  |
+# Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
 
@@ -232,64 +245,196 @@ log(sqrt(4), 10)# gives exactly the same as the above as sqrt(4) = 2
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
 # One dimension  |	 Vectors   |	    Lists     |
-# Two dimensions |	Matrixes	 |	 Data frames  |
+# Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
 # Vectors are one-dimensional objects that can have different lengths and can
-# contain different values, but all of the same nature (all numeric, all characters, all logical...)
-my.first.vector <- c(1, 5, 2, 6, 8, 9, 12, 2.4, 0.3, -2.56)
+# contain different values, but all of the same data type (all numeric, all 
+# characters, all logical...)
+
+# we can create them by using c():
+?c
+vec1 <- c(1, 5, 2, 6, 8, 9, 12, 2.4, 0.3, -2.56)
+vec2 <- c("vectors", "can", "contain", "any", "data", "type")
+
 # the c() function stands for "concatenate" and is used to join objects together
-my.first.vector
+vec1
+vec2
+
+# we can quickly create numeric vectors with certain patterns using the seq() 
+# function :
+
+?seq
+vec3 <- seq(1, 11, 2)
+vec3
+
+# If you only want to increment by 1, there is a shorthand (syntactic sugar):
+
+vec4 <- 11:20
+vec4
+
+# We can get information about our vectors using some functions:
 
 # how long is my vector?
-length(my.first.vector) # it's a vector of length 10
+length(vec1) # it's a vector of length 10
 
-# you can access the value of a specific element in your vector using squared brackets:
-my.first.vector[8] # the value of the eighth element in our vector
-my.first.vector[6]
+# what data type is in my vector?
+class(vec1)
 
-# we can also decide to store string elements in our vector:
-a.string.vector <- c("here", "are", "some", "elements")
-a.string.vector
 
-# paste() is a useful function to use with strings:
-c <- "hello"
-d <- "world"
-paste(c, d)
-paste(c, d, sep = ",") # specifies the separator of the two objects!
-paste(1, 2)
 
-# paste0() is a similar function, which by default puts no separator:
-paste0(c, d)
+# It's useful to be able to access or recode certain parts. We can access parts
+# of our vector using square brackets [] immediately after their name.
 
-# Notice this: you can't have different types of objects at the same time in a vector!
-wrong <- c("this will not work", 2)
-wrong # R has automatically turned our 2 into a string (a "2").
+# If we want to access the second value of a vector:
 
-# our vector can also be a factor. This is used to create categorical variables 
-# In this case we need to introduce the factor() function
-category <- factor(x = c("England", "England", "England", "Scotland", "Scotland", "Wales", "Wales", "Northern Ireland"))
-category
-# we have created a categorical vector with four levels: England, Scotland, Wales, Northern Ireland
+vec2[2]
+vec4[2]
 
-# we can have logical vectors (or boolean), which can only take values TRUE or FALSE (1 or 0)
-l <- c(T, F, F, T)
-l <- c(TRUE, FALSE, FALSE, TRUE)
-l
+# If we want to access more than one part of a vector, we can put a vector
+# INSIDE the square brackets to get at it:
 
-# notice that we can get the same result by doing the following:
-l2 <- as.logical(c(1, 0, 0, 1))
-c(1, 0, 0, 1)
-l2
-# notice what we have done: we've asked R to first create a numeric vector 1,0,0,1 using
-# the c() function. Then we have applied to this vector the function as.logical(), which
-# tries to turn its argument into a logical vector. 
+vec4[1:5] # don't forget inside-out - 1:5 becomes a vector of 5 values, which are then used
 
-# whenever we want to know what type of object is an r object we can do:
-class(l2)
-class(category)
-class(a.string.vector)
-class(my.first.vector)
+
+
+# Notice also that we can use a vector of TRUEs and FALSEs the *same length* as
+# vector we are subsetting to extract values. So if I only want the first value:
+
+vec4[c(T,replicate(9,F))]
+
+# this might be starting to look a little complicated. Don't forget, inside-out order!
+# If you want to understand what's going on, break it down into steps:
+
+?replicate
+replicate(9,F)
+c(T,replicate(9,F))
+vec4[c(T,replicate(9,F))]
+vec4[1]
+
+
+# This becomes useful once we introduce two further concepts: logical expressions
+# and vectorisation.
+
+# Let's start with vectorisation. Most (though not all) things in R are
+# *vectorised*. This means if I try and add 10 to a numeric vector, it will add
+# 10 to all components of that vector:
+
+1:10
+1:10 + 10
+
+# It also means that were necessary, R can *recycle* one of the two vectors you're
+# adding to each other if they're not the same length:
+
+1:10 + c(10,20)
+
+# BUT: the longer vector needs to be a multiple of the shorter vector for
+# this to work:
+1:10 + 1:3 #won't work because 10 isn't a multiple of 3
+
+
+
+
+# On to logical operations. To introduce the main ones:
+
+# == equal to
+# != is not equal to
+# > greater than
+# < less than
+# >= greater than or equal to
+# <= less than or equal to
+# | or
+# & and
+# ! not
+
+# These can seem like a lot at first. Let's see them in action:
+
+10 == 10
+10 == 11
+10 > 4
+10 < 4
+
+# so - we have two statements either side, and the expression returns
+# TRUE or FALSE. So far so good. Now, recall the concept of vectorisation -
+# these expressions are vectorised too!
+
+# For example:
+
+1:10 < 5
+# this returns a vector of the same length of TRUES and FALSES to give us
+# a TRUE or FALSE for each component of the vector
+
+
+# Hopefully you can see where this starts to become useful. Let's say
+# I want to subset all elements of my vector that are greater than 15:
+vec4[vec4 > 15]
+
+
+# You can check the type of your data with the following functions:
+is.logical(T)
+is.logical(2)
+is.numeric(2)
+is.numeric(T)
+is.character("hello, world!")
+is.character(TRUE)
+
+# If you want to check whether you have a vector, use the is.atomic() function:
+is.atomic(1:10)
+# DON'T get this confused with is.vector() - this isn't doing what you think
+# it's doing!
+
+
+
+
+# Two more things before we carry on. We can also use the square brackets to
+# recode subsections of our vector. Let's say I want to change the second word
+# in vec2 to "banana":
+
+vec2
+vec2[2] <- "banana"
+vec2
+
+# As you can imagine, this becomes very useful when combined with logical
+# expressions. We can conditionally recode subections of our vectors!
+
+
+
+
+# The last thing is type coercion. We can change vectors of one data type to
+# another using the following functions:
+
+# as.numeric()
+as.numeric(TRUE) # TRUE will become 1, FALSE will become 0
+as.numeric("a") #notice the warning - R doesn't know how to convert characters to numeric
+as.numeric("2") #though it WILL get numbers stored in strings right
+
+
+# as.logical()
+as.logical(1) # vice versa
+as.logical("true") #pretty handy 
+as.logical("tRuE") # but we can't push it too far
+
+
+# as.character()
+as.character(1)
+as.character(TRUE)
+# it's very easy to turn things into characters!
+# but NAs will (appropriately) stay NA:
+as.character(NA)
+
+
+# There is also *implicit* conversion in R. What happens if we try to replace
+# the fourth component of vec2 with the number 20?
+
+vec2
+vec2[4] <- 20
+vec2
+
+# It worked - BUT converted our number to a character!
+
+# In general, try to avoid implicit conversion. It won't always work outside
+# of the square brackets, and can lead to unintended consequences if you're not
+# careful.
 
 
 
@@ -299,68 +444,60 @@ class(my.first.vector)
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
 # One dimension  |	 Vectors   |	    Lists     |
-# Two dimensions |	Matrixes	 |	 Data frames  |
+# Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
-# A matrix is a two-dimensional vector. Besides being two-dimensional, the same rules of vectors
-# apply to matrix: a matrix can only contain data of the same type.
-# Suppose we want a 3x4 matrix with numbers from 1 to 12 in its cells:  
-m <- matrix(data = 1:12, # the data in our matrix. Pick all integers from 1 to 12 (included)
+# We can think of matrices as two-dimensional vectors. They also have to contain
+# the same data type (i.e. no mixing or matching). The above functions like
+# as.character() will work on them too!
+
+# We create matrices with the matrix() function:
+?matrix
+
+
+# Let's create a 3x4 matrix with numbers from 1 to 12 in its cells:  
+myMatrix <- matrix(data = 1:12, # the data in our matrix. Pick all integers from 1 to 12 (included)
             nrow = 3, # the number of rows 
             ncol = 4, # the number of columns
             byrow = TRUE) # do we want data to be stored in cells by row or by column?
-m
+myMatrix
 
-# we can access an individual element of a matrix in R by specifying its position:
-m[2,4] # the object in the 2nd row, 4th column
-m[,1] # all the first column
-m[1,] # all the first row
+# One thing to pick up before we continue - notice how we can spread our
+# functions across several lines. Notice also that ctrl+enter (cmd+enter) will
+# run the whole thing UNLESS we're highlighting a particular part of it.
 
-# we can also give names to our columns and rows:
-colnames(m) <- c("one", "two", "three", "four")
-rownames(m) <- c("a", "b", "c")
-m
 
-# R can also perform matrix algebra:
-m2 <- matrix(data = seq(from = -1, to = 0.1, by = 0.10), # seq() gives you a sequence
-             nrow = 3)
-m2
+# Subsetting matrices is VERY similar to subsetting vectors, except now we have
+# two dimensions to work with. So, we introduce a comma into the square brackets
+# [,] and just like in linear algebra, we use a [row, column] format. Let's
+# see some examples:
 
-# matrix addition:
-m + m2
-m - m2
+myMatrix[2,4] # the value in the 2nd row, 4th column
+myMatrix[,1] # all the first column (notice the row slot is left blank)
+myMatrix[1,] # all the first row (notice the column slot is left blank)
+myMatrix[,2:3] #2nd and 3rd column
 
-# multiplication by a scalar:
-a * m
-m * a
 
-# matrix multiplication:
-mat1 <- matrix(data = rep(4, times = 8), # rep() replicates the first argument (4) a number of times
-               nrow = 4)
-mat1
 
-m %*% mat1
+# We can also give names to our columns and rows:
+colnames(myMatrix) <- c("one", "two", "three", "four")
+rownames(myMatrix) <- c("a", "b", "c")
+myMatrix
 
-# you can also obtain the transpose of a matrix using the t() function:
-t(m)
 
-# and the inverse of a (square) matrix using the solve() function:
-m <- matrix(data = c(9, 3, 6, -1, 2, 4, 5, 6, 4), nrow = 3)
-m
-solve(m)
+# I won't be showing you matrix algebra in action during this class (you're
+# unlikely to need it outside of introductory exercises and advanced programming)
+# But to summarise the available functions:
 
-# You can also have arrays, that are matrixes with more than 2 dimensions.
-# You can think of them as matrixes stacked on top of each other, possibly
-# in more than one dimension. This is not part of today's class.
+# + matrix addition
+# * multiplication by a scalar
+# %*% matrix multiplication
+# t() transpose
+# solve() inverse
+# diag() get the diagonal
 
-# look at our environment, on the right. Now we have quite some stuff in it and we
-# might want to do some cleaning. The rm() function removes objects:
-rm(a, b, a.string.vector)
-# or maybe we want to remove everything:
-rm(list = ls())
-
-# it's always safest to start your R script clearing everything, so 
-# that line of code should always be on top of your project.
+# finally, to introduce the relevant logical check:
+is.matrix(myMatrix)
 
 
 
@@ -370,66 +507,73 @@ rm(list = ls())
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
 # One dimension  |	 Vectors   |	    Lists     |
-# Two dimensions |	Matrixes	 |	 Data frames  |
+# Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
-# They are perhaps the most common object you'll be dealing with in R.
-# Most databases are imported automatically as data frames (df).
-# They have multiple variables organized in columns, and each row represents one observation
-# They look like the typical database you might have dealt with in STATA, SAS or SPSS
+# So far, so good. But realistically, we're probably going to have a mix of
+# data types in the datasets we're using. This is where the heterogeneous
+# data structures come in.
 
-# Before importing one, let's create one from scratch and see how it looks like.
+# By far one of the most important in R is the data frame. This is similar to 
+# a matrix with the very important exception that its columns can be of different
+# data types.
 
-datafr <- data.frame(
+# Another way of thinking of a data frame is that all of its columns are vectors.
+# They follow all the same rules as vectors outside of dataframes AND they must
+# be of the same length.
+
+# They're more than a little reminiscent of excel spreadsheets, data loaded into
+# stata, etc.
+
+# We create data frames with the data.frame() function:
+
+?data.frame
+
+mydf <- data.frame(
   var1 = c(rep("a", 3), rep("b", 4), rep("c", 2), "d"),
   var2 = rnorm(n = 10, mean = 0, sd = 1.3), # here we are drawing 10 random values from a 
   # normal distribution with mean = 0 and sd = 1.3
-  var3 = c(1, -4, 2, 4.2, 5.3333, 1/9, 7.5, 0.000, 1-12, sqrt(2)) # notice that here we are
-  # creating a vector where the elements are expressions! We also include the squared root of 2
-)
-version
-datafr
+  var3 = c(1, -4, 2, 4.2, 5.3333, 1/9, 7.5, 0.000, 1-12, sqrt(2))
+  )
+mydf
 
-# in the code above we draw random values from a normal distribution. We can easily draw 
-# random values from many distributions in R. E.g.:
-set.seed(123445789)
-rbinom(n = 5, size = 10, prob = 0.4) # draw 5 random values from a binomial distrib with n = 10, p = .4
-rnorm(n = 5, mean = 12, sd = 0.2) # draw 5 random values from a normal distr. with mean = 12, sd = 0.2
-runif(n = 3, min = 0, max = 2) # draw 3 random values from a uniform distr. with min = 0, max = 2
-rt(n = 12, df = 14) # draw 12 random values from a t-student distribution with 14 degrees of freedom
-rf(n = 10, df1 = 5, df2 = 12) # 10 random values from an F distribution...
-# ...etc
+?rnorm # there are lots of functions for distributions in r
+?runif # I won't stop to show more, but if you ever need them they're fairly easy to find!
 
-# each variable within our data frame is a vector, and the rules of vectors apply to them.
-# all variables in a data frame must have the same length. But we might have variables with
-# missing values. In R these missing values are called NA:
-df <- data.frame(var1 = c(rep("a", 3), rep("b", 4), rep("c", 2), "d"),
-                 var2 = c(1,2,3,4,5,NA,7,8,9,10))
-df # we have a missing value in var2
 
-class(datafr)
 
-# we can access information in one column of our data frame using the $ operator:
-datafr$var1 # this gives us precisely the object we want.
-datafr$var3
+class(mydf)
+is.data.frame(mydf)
 
-class(datafr)
-class(datafr$var1)
-class(datafr$var2)
-class(datafr$var3)
 
-# we can then use these vectors to perform all operations as for other vectors.
-datafr$var2 * 4
 
-# for instance, we might want to see what is the value of the fifth element in the
-# column "var3" of the data frame "datafr":
-datafr$var3[5]
-df$var2[6]
-df$var2[2]
+# we can use the square brackets in much the same way as with matrices:
 
-# we can also change values of course!
-datafr$var3[4] <- 3.79812312
+mydf[1:3,] # first three rows
+mydf[2,2] # second row, second column
 
+# if we ignore the comma, numbers will pull out columns:
+mydf[2]
+
+# though notice something important here:
+mydf[2]
+mydf[[2]]
+is.data.frame(mydf[2]) #this is a data frame with one column
+is.data.frame(mydf[[2]]) #this is a vector
+is.atomic(mydf[[2]])
+
+# importantly, we can access variables by their name using the dollar sign $:
+mydf$var2
+
+# we can go a step further and subset from the vectors:
+mydf$var2[2] #the 2nd element of the vector var2 inside the data frame mydf
+
+
+# recoding works as before:
+mydf$var1 <- replicate(10, "hello, world!")
+mydf$var1
+mydf$var1[5] <- "banana bread"
+mydf$var1
 
 
 
@@ -439,7 +583,7 @@ datafr$var3[4] <- 3.79812312
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
 # One dimension  |	 Vectors   |	    Lists     |
-# Two dimensions |	Matrixes	 |	 Data frames  |
+# Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
 # Lists are the last object type that we briefly consider today. Lists are objects that include
@@ -466,3 +610,41 @@ datafr$var1 <- as.factor(datafr$var1)
 # as.data.frame()
 # as.array()
 # as.list()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 1.5 Factors ----
+
+
+# our vector can also be a factor. This is used to create categorical variables 
+# In this case we need to introduce the factor() function
+category <- factor(x = c("England", "England", "England", "Scotland", "Scotland", "Wales", "Wales", "Northern Ireland"))
+category
+# we have created a categorical vector with four levels: England, Scotland, Wales, Northern Ireland
+
+
+
+
+# look at our environment, on the right. Now we have quite some stuff in it and we
+# might want to do some cleaning. The rm() function removes objects:
+rm(a, b, a.string.vector)
+# or maybe we want to remove everything:
+rm(list = ls())
+
+# it's always safest to start your R script clearing everything, so 
+# that line of code should always be on top of your project.
+
