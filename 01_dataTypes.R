@@ -8,7 +8,7 @@
 
 
 
-# 1 Introduction  ----
+# Introduction  ----
 
 # First things first: text proceeded by a hashtag in R is a comment. If you 
 # run a comment through R, it will ignore it! This is useful for helping both
@@ -43,7 +43,7 @@
 
 
 
-## 1.1 R Data Types ----
+# 1 R Data Types ----
 
 # There are four main data types in R. We'll go over the first three now, and 
 # talk about the last one later.
@@ -85,7 +85,7 @@ NULL # basically an undefined value - there's nothing there (not even missing da
 
 
 
-## 1.2 Creating and assigning objects ----
+# 2 Creating and assigning objects ----
 
 # In R (and other programming languages), it's useful to be able to access the
 # same value again and again.
@@ -132,7 +132,7 @@ a + banana
 
 
 
-## 1.3 Using Functions ----
+# 3 Using Functions ----
 
 # You may have noticed that so far we've seen the following math operators:
 # * / + - ^ (multiplication, division, addition, subtraction, exponentiation)
@@ -216,7 +216,7 @@ paste("This", "is", "a", "full", "sentence", sep="-")
 
 
 
-## 1.4 Data Structures ----
+# 4 Data Structures ----
 
 # It's not very useful to use just one value on its own a time!
 # We can store lots of data in larger *data structures*.
@@ -240,7 +240,7 @@ paste("This", "is", "a", "full", "sentence", sep="-")
 
 
 
-### 1.4.1 vectors ----
+## 4.1 vectors ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -283,6 +283,9 @@ class(vec1)
 
 
 
+
+### 4.1.1 Subsetting ----
+
 # It's useful to be able to access or recode certain parts. We can access parts
 # of our vector using square brackets [] immediately after their name.
 
@@ -295,7 +298,6 @@ vec4[2]
 # INSIDE the square brackets to get at it:
 
 vec4[1:5] # don't forget inside-out - 1:5 becomes a vector of 5 values, which are then used
-
 
 
 # Notice also that we can use a vector of TRUEs and FALSEs the *same length* as
@@ -312,6 +314,10 @@ c(T,replicate(9,F))
 vec4[c(T,replicate(9,F))]
 vec4[1]
 
+
+
+
+### 4.1.2 Logical expressions ----
 
 # This becomes useful once we introduce two further concepts: logical expressions
 # and vectorisation.
@@ -386,22 +392,28 @@ is.atomic(1:10)
 
 
 
-# Two more things before we carry on. We can also use the square brackets to
-# recode subsections of our vector. Let's say I want to change the second word
-# in vec2 to "banana":
+### 4.1.3 Recoding ----
+
+# We can also use the square brackets to recode subsections of our vector. Let's
+# say I want to change the second word in vec2 to "banana":
 
 vec2
 vec2[2] <- "banana"
 vec2
 
 # As you can imagine, this becomes very useful when combined with logical
-# expressions. We can conditionally recode subections of our vectors!
+# expressions. We can conditionally recode subsections of our vectors!
+
+vec1
+vec1[vec1 < 3] <- 100
+vec1
 
 
 
 
-# The last thing is type coercion. We can change vectors of one data type to
-# another using the following functions:
+### 4.1.4 Coercion ----
+
+# We can change vectors of one data type to another using the following functions:
 
 # as.numeric()
 as.numeric(TRUE) # TRUE will become 1, FALSE will become 0
@@ -439,7 +451,72 @@ vec2
 
 
 
-### 1.4.2 matrixes ----
+### 4.1.5 Factors ----
+
+# Factor variables are the last data type. They can be a little finciky to
+# work with and only really make sense to use once you're using vectors.
+
+# Let's say we have a vector where we want to set the following codings:
+# 1 = Wales
+# 2 = England
+# 3 = Scotland
+# 4 = Northern Ireland
+
+n <- 5
+countries <- c(replicate(n, 1), replicate(n, 2), replicate(n, 3), replicate(n, 4))
+
+
+# We use the factor() function to make factors:
+?factor
+
+# the relevant parts here are 'levels' and 'labels':
+countriesFac <- factor(countries, 1:4, c("Wales", "England", "Scotland", "Northern Ireland"))
+
+countries
+countriesFac
+
+
+# note that we don't have to use numbers as the levels/values: we can just turn
+# character vectors into factors:
+
+size <- c("Small", "Big", "Medium", "Small")
+factor(size)
+
+# use the 'levels' argument if you want to put values in a particular order:
+factor(size, levels=c("Small", "Medium", "Big"))
+
+# you can explicitly declare the factor as ordered with the ordered argument,
+# but whether this matters can depend a bit on what you're doing and the package(s)
+# you're using:
+
+sizeFac <- factor(size, levels=c("Tiny", "Small", "Medium", "Big", "Huge"), ordered=T)
+sizeFac
+
+# some useful factor functions:
+sizeFac <- droplevels(sizeFac) # removes any unused levels from a factor. Will keep ordering
+sizeFac
+is.factor(countriesFac) # tests whether a vector is a factor
+is.ordered(sizeFac) #tests whether a factor is ordered
+
+
+
+
+
+# look at our environment, on the right. Now we have quite some stuff in it and we
+# might want to do some cleaning. The rm() function removes objects:
+rm(a, b, a.string.vector)
+# or maybe we want to remove everything:
+rm(list = ls())
+
+# it's always safest to start your R script clearing everything, so 
+# that line of code should always be on top of your project.
+
+
+
+
+
+
+## 4.2 matrixes ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -502,7 +579,7 @@ is.matrix(myMatrix)
 
 
 
-### 1.4.3 data frames ----
+## 4.3 data frames ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -519,29 +596,29 @@ is.matrix(myMatrix)
 # data types.
 
 # Another way of thinking of a data frame is that all of its columns are vectors.
-# They follow all the same rules as vectors outside of dataframes AND they must
+# They follow all the same rules as vectors outside of data frames AND they must
 # be of the same length.
 
 # They're more than a little reminiscent of excel spreadsheets, data loaded into
 # stata, etc.
 
 # We create data frames with the data.frame() function:
-
 ?data.frame
 
+n <- 10 # good programming practice: program any constants you're using more than once
 mydf <- data.frame(
-  var1 = c(rep("a", 3), rep("b", 4), rep("c", 2), "d"),
-  var2 = rnorm(n = 10, mean = 0, sd = 1.3), # here we are drawing 10 random values from a 
-  # normal distribution with mean = 0 and sd = 1.3
-  var3 = c(1, -4, 2, 4.2, 5.3333, 1/9, 7.5, 0.000, 1-12, sqrt(2))
-  )
+  var1 = replicate(n, "a"),
+  var2 = rnorm(n = n, mean = 0, sd = 1.3),
+  var3 = c(1, -4, 2, 4.2, 5.3333, 1/9, 7.5, 0.000, 1-12, sqrt(2)))
 mydf
 
+
+# A brief note on distributions
 ?rnorm # there are lots of functions for distributions in r
 ?runif # I won't stop to show more, but if you ever need them they're fairly easy to find!
 
 
-
+# Class and a logical test
 class(mydf)
 is.data.frame(mydf)
 
@@ -568,7 +645,6 @@ mydf$var2
 # we can go a step further and subset from the vectors:
 mydf$var2[2] #the 2nd element of the vector var2 inside the data frame mydf
 
-
 # recoding works as before:
 mydf$var1 <- replicate(10, "hello, world!")
 mydf$var1
@@ -578,7 +654,7 @@ mydf$var1
 
 
 
-### 1.4.4 lists ----
+## 4.4 lists ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
@@ -586,65 +662,58 @@ mydf$var1
 # Two dimensions |	Matrices	 |	 Data frames  |
 # ---------------+-------------+----------------+
 
-# Lists are the last object type that we briefly consider today. Lists are objects that include
-# different other objects in R, of whatever type. A list can even contain another list.
-ls <- list(df, datafr, datafr$var2)
-ls
+# Lists are a fairly unique data structure in R - at least compared to the others.
+# In one way, they're as data frames are to matrices in that they can store
+# different data types (this is the 'heterogeneous' part)
 
-ls2 <- list(df, ls)
-ls2
+# Unlike every other data type in R however, lists don't have to be 'flat'.
+# What this means is that they don't just store different data types -
+# they also store other data structures, including other lists!
 
-# etc.
+# We can make lists with the list() function:
 
-# there are many functions that allow you to try to coerce the nature of an object:
-# as.numeric() tries to coerce its argument into a numeric
-# as.integer() tries to coerce its argument into an integer
-# as.character() tries to coerce its argument into a character
-# as.factor() tries to coerce its argument into a factor
+myList <- list(1, "banana", TRUE, mydf, 1:20)
+myList
 
-# for instance you might want to coerce the variable var1 into a factor:
-datafr$var1 <- as.factor(datafr$var1)
+myList2 <- list(1:11, myList)
+myList2
 
-# and also its class!
+
+# Lists follow the same square bracket notation as other objects:
+
+myList[5]
+
+# but notice that this item is still a list of length one:
+is.list(myList[5])
+length(myList[5])
+
+# similar to data frames, we need to double up on our square brackets to
+# get to the object inside
+is.list(myList[[5]])
+length(myList[[5]])
+
+
+# in fact, here's an 'under the hood' R secret: data frames are really just
+# lists of vectors where the vectors have to be the same length:
+is.list(mydf)
+
+# if this confuses you, feel free to forget it - at this level it's more fun
+# fact than useful information. Later on in your R careers this may be good to
+# know however - as it helps explain some of R's quirkier behaviours (like the
+# fact that this returns true)!
+
+
+
+
+## 4.5 Coercion ----
+
+# Just like vectors, we can coerce R data structures of one kind to another
+# kind, again with varying degrees of success depending on how well they fit
+# each other:
+
 # as.matrix()
 # as.data.frame()
-# as.array()
 # as.list()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## 1.5 Factors ----
-
-
-# our vector can also be a factor. This is used to create categorical variables 
-# In this case we need to introduce the factor() function
-category <- factor(x = c("England", "England", "England", "Scotland", "Scotland", "Wales", "Wales", "Northern Ireland"))
-category
-# we have created a categorical vector with four levels: England, Scotland, Wales, Northern Ireland
-
-
-
-
-# look at our environment, on the right. Now we have quite some stuff in it and we
-# might want to do some cleaning. The rm() function removes objects:
-rm(a, b, a.string.vector)
-# or maybe we want to remove everything:
-rm(list = ls())
-
-# it's always safest to start your R script clearing everything, so 
-# that line of code should always be on top of your project.
 
