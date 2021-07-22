@@ -19,3 +19,8 @@ set.seed(42)
 aoe <- aoe[rbinom(nrow(aoe), 1, 0.01),]
 write.csv(aoe, "data/match_players.csv")
 ```
+
+- CHES2019V3.dta
+  - Chapel Hill Expert Survey 2019
+  - Source: https://www.chesdata.eu/our-surveys
+  - Dataset not included in repo as no clear licencing
