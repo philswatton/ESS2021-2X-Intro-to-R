@@ -63,44 +63,87 @@ getwd()
 
 ## 1.3 CSV files ----
 
-# R comes with a ready-made read.csv function for csv (comma separated values)
-# files. Let's use that now to read in the baseball
+# csv (comma separated values) are a common file format across the world. R
+# comes with a ready-made read.csv() function for csv files. Let's use it to
+# read in match_players.csv:
 
-# now import data from a csv file and save it in an object
-baseball <- read.csv("baseball.csv")
-class(baseball)
+aoe <- read.csv("data/match_players.csv") #data/ is because it's stored in the 'data' folder of these files
+class(aoe)
 
-# we have imported this csv file on characteristics of US baseball players. It's automatically
-# imported as a data frame. To see it you can type:
-View(baseball) # or simply click on the data frame in your environment to the right ---->
+# match_players.csv contains player data from matches from the game Age of 
+# Empires 2. You can find the full version of the dataset on Kaggle at
+# https://www.kaggle.com/jerkeeler/age-of-empires-ii-de-match-data?select=match_players.csv
 
-# it's also good to take a look at our datasets by doing:
-head(baseball) # shows the first 6 observations, all columns
-str(baseball) # tells us what types of variables we have in our data frame
 
-# as you can see we have a first column we don't really need.
-# We can remove it by doing:
-baseball$X <- NULL # great.
+# We can view a dataset in a pane either by clicking on its name in the global
+# environemnt or with the View() function (note the capital V):
+View(aoe)
 
-# before starting to do some analysis, let's see how to import datasets with other extensions.
-# Suppose we have a dta file (STATA extension) to import. In this case, base R will
-# not be able to import it. We need to install and load a package. We will make use
-# of plenty of packages when working in R.
-install.packages("foreign") # foreign is a good package to load data from STATA
+# We can get a sense of our dataset by looking at the top few rows:
+head(aoe)
 
-# Now we have installed it. In order to use the package we need to tell R to load it:
-library("foreign") # now we can use it.
+# And we can use the str() function to see what types of variable we have in
+# our data frame:
+str(aoe) # 'int' or 'integer' is one kind of numeric. The other you'll likely see is 'dbl' or 'double'. In R, 99% (or more) of the time you won't need to worry about this distinction
 
-ANES <- read.dta("anesByState.dta")
-View(ANES)
 
-install.packages("readr")
-library("readr")
+# We can remove columns we don't need by assigning NULL to them:
+aoe$X <- NULL
+head(aoe)
 
-# In case we wanted to import a database from Excel, the package we want to rely on is readxl
-install.packages("readxl") # and its functions read_xls() and read_xlsx()
-# then you should load it, of course, using: library("readxl")
-library("readxl")
+
+
+
+## 1.4 Other file types
+
+# Often, you won't find files in a csv format. One format that's very common
+# (at least in political science) is STATA's dta file format. For this, we need
+# to use an R package because base R doesn't have the functionality to import
+# them.
+
+# R packages contain code written by other R users that have been bundled up and
+# made available on CRAN (from where you downloaded R).
+
+# Often, if you need to do something in R, you'll probably be using a package to
+# do it. The best way to find them is by using google, but I'll include some
+# recommendations at the end of today's class.
+
+# I've downloaded the 2019 Chapel Hill Expert survey from their website
+# (https://www.chesdata.eu/our-surveys). But I've downloaded it in dta format.
+
+# Since it's a fairly recent file (STATA version 13 or later), we'll use the
+# readstat13 package. To install it, we use the install.packages function:
+
+install.packages("readstata13")
+
+
+# You only need to install a package once. However, since we don't want all
+# of our packages in memory all the time when using R, we have to explicitly
+# load them for each fresh R session. We do this with the library() function:
+library(readstata13)
+
+
+# While I've written this library call here, normally it's a good
+# idea to have library calls at the TOP of your script. This helps your future
+# self, collaborators, and replicators know in advance what packages you used.
+
+# Now, we'll use the read.dta13 function from readstata13 to load in the CHES
+# dataset:
+ches <- read.dta13("data/CHES2019V3.dta")
+
+
+# Some other packages you'll want installed are the foreign and readxl packages:
+install.packages(c("foreign", "readxl"))
+
+# Foreign is a good workhorse package for reading in data. It has read.dta (for
+# STATA versions prior to 13 - probably more common that later dta files) and
+# read.spss among other functions.
+
+# readxl is the package you want for reading in excel files - read_xls() and
+# read_xlsx() depending on your need.
+
+# We'll also be installing readr later on in this class - I'll mention when we
+# do.
 
 
 
