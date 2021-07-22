@@ -8,13 +8,14 @@ The class covers the basics of getting started in R, including using scripts, us
 ## Data
 
 - match_players.csv
-  - Dataset containing Age of Empires 2 match data
+  - Dataset containing Age of Empires 2 match data - 1% of original observations
   - Source: https://www.kaggle.com/jerkeeler/age-of-empires-ii-de-match-data?select=matches.csv
   - Licence: https://creativecommons.org/licenses/by/4.0/
-  - Full dataset filtered with the following lines of code in R:
+  - Dataset filtered from original using the following lines in R:
 
 ```r
-aoe <- read.csv("data/match_players.csv"
+aoe <- read.csv("data/match_players.csv")
 set.seed(42)
 aoe <- aoe[rbinom(nrow(aoe), 1, 0.01),]
+write.csv(aoe, "data/match_players.csv")
 ```
