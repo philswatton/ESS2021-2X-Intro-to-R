@@ -2,7 +2,7 @@
 # 2X Introduction to R
 # Phil Swatton
 # Modified from 1X Introduction to R files by Lorenzo Crippa
-# Sunday 23rd July 2021, 11am-5pm BST
+# Sunday 25th July 2021, 11am-5pm BST
 # File 02: importing data sets, R packages, managing data with the tidyverse
 
 
@@ -101,6 +101,9 @@ library("readr")
 install.packages("readxl") # and its functions read_xls() and read_xlsx()
 # then you should load it, of course, using: library("readxl")
 library("readxl")
+
+
+
 
 # 2 Manage datasets ----
 
