@@ -1,18 +1,70 @@
-# 2) IMPORT AND MANAGE DATASETS ----
+# Essex Summer School in Social Science Data Analysis
+# 2X Introduction to R
+# Phil Swatton
+# Modified from 1X Introduction to R files by Lorenzo Crippa
+# Sunday 23rd July 2021, 11am-5pm BST
+# File 02: importing data sets, R packages, managing data with the tidyverse
 
-## 2.1 Import datasets ----
 
-# now let's import databases from outside. We'll deal with different types of databases
-# first things first: let's clean our environment before starting to deal with databases
+
+
+# 1 Importing datasets ----
+
+## 1.1 Clearing the environment ----
+
+# Before we begin, let's make sure to clear our global environment. We can do
+# this eithe with the following line of code:
+
 rm(list = ls())
 
-# The first thing we should always do in our R project is to set up our working directory (wd),
-# i.e. the folder on our computer where we are going to work from, where we store our data
-# and where perhaps we might want to save our plots or the outputs from the analysis.
-# In R we do it using the setwd() function:
-setwd("C:/Users/User/OneDrive/Documents/ESS/2021/1X")
-# change that string with the one that corresponds to the location of your wd and run the code!
+# Or by clicking on session -> clear workspace -> yes
+
+# If you do it by code, make sure to keep that line *at the top* of your script.
+# It's really important that you start fresh each time you do work in R, to make
+# sure that your workflow (the order you do things) is replicable. In other words,
+# it helps make sure that your future self or someone else can open up your script,
+# run everything, and get the same result every time.
+
+
+
+
+## 1.2 Working directories ----
+
+# To read in and save files, R needs to know where in your computer to look.
+# One way of doing this is by using the setwd() function to set your *working
+# directory*. This is basically a location in your files that R will try and
+# read files from and will save files to:
+
+setwd("C:/Users/User/OneDrive/Documents/ESS/2021/1X") #this is the file path where I have the course files - you'd need to fill in your own
+
+
+# you can view your current working director with getwd():
 getwd()
+
+
+# However, an easier and better way of managing this is with R projects. By
+# opening a project in RStudio, your working directory will automatically be
+# set to the location the project is in.
+
+# This is especially useful if you ever need to move your files around or
+# work with collaborators - it gets rid of all the hassle of file paths.
+
+# In our class files I've included a project called 2X.Rproj. Go to file ->
+# Open Project and open it now.
+
+# You can create a new project from the file window. Doing so will also create
+# a new folder with the project inside.
+
+# In general, I would *strongly* recommend using R projects to manage your
+# file paths.
+
+
+
+
+## 1.3 CSV files ----
+
+# R comes with a ready-made read.csv function for csv (comma separated values)
+# files. Let's use that now to read in the baseball
 
 # now import data from a csv file and save it in an object
 baseball <- read.csv("baseball.csv")
@@ -50,7 +102,7 @@ install.packages("readxl") # and its functions read_xls() and read_xlsx()
 # then you should load it, of course, using: library("readxl")
 library("readxl")
 
-## 2.2 Manage datasets ----
+# 2 Manage datasets ----
 
 # Database management (dropping observations and vars, sorting our data, etc.) 
 # can be done using the basic R language. 
