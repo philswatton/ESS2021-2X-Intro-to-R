@@ -141,42 +141,81 @@ ches %>%
 
 # 2 Plotting ----
 
-# we now want to obtain some plots about our data. We'll see how to:
-# 1) obtain boxplots
-# 2) obtain histograms
-# 3) obtain density plots
-# 4) obtain twoway plots
+# Here, we'll be doing a mix of base R plotting and tidyverse plotting via
+# the tidyverse package ggplot2 (already loaded earlier).
 
-# we'll see how base R obtains plots and how tidyverse 
-# does (using the package ggplot2, part of the suite)
+# We'll look at four kinds of plot:
+# 1) Boxplots
+# 2) Histograms
+# 3) Density plots
+# 4) Twoway plots
+
+# Obviously, many others can be done - especially via ggplot2 (and associated
+# packages)
+
+
+
 
 ## 2.1 boxplots ----
 
-# to obtain it we simply run:
-boxplot(ANES$white)
+# In base R we use the boxplot() function:
+boxplot(aoe$rating)
 
-# we can then intervene on options and modify its appearance:
-boxplot(ANES$white, frame = F, ylab = "white", main = "A boxplot")
+# We can use arguments to modify its appearance:
+boxplot(aoe$rating, frame = F, ylab = "Rating", main = "AOE2 Player Ratings")
 
-# this would be the tidyverse way of doing it:
-ggplot(ANES, aes(y = white)) + geom_boxplot()
-# we use the ggplot() function to create a graph. We need to tell the function what data frame
-# we draw information from (ANES), and what we should put on the y axis (white variable). Next
-# we need to "add" the type of graph ("geometry" in ggplot2 jargon) we want to create: geom_boxplot()
+# It's a little more involved in the tidyverse:
+ggplot(aoe, aes(y = rating)) + 
+  geom_boxplot()
 
-# what if we wanted to show the distribution of a variable in separate boxplots according to
-# another variable? For instance we might want to plot distributions of heights of baseball
-# players for the teams "BAL", "NYY", "SEA", "WAS", "PHI", "NYM", "TEX".
-# re-import the dataset first:
-baseball <- read.csv("baseball.csv")
-selection <- filter(baseball, team %in% c("BAL", "NYY", "SEA", "WAS", "PHI", "NYM", "TEX"))
-boxplot(selection$heightinches ~ selection$team, # plot height by team
-        frame = F, ylab = "height", xlab = "team", main = "Boxplot of height distributions")
+# We start by using the ggplot() function to create a graph. Here we tell it
+# what dataset to use, and what the relevant 'aesthetics' to use are. The most
+# common ones are y axis, x axis, group, and fill (similar to group).
 
-# in tidyverse:
-ggplot(selection, aes(y = heightinches, x = team)) + 
-  geom_boxplot() +
-  labs(y="Height (Inches)")
+# Then, ggplot2 brings some unique syntax. After the ggplot() function, we put
+# a plus sign. After that, we add a geom (geometry). We can also add further
+# geoms and other features after that, each time chaining things together with
+# the + sign.
+
+# This can get fairly involved, but it's *very* powerful:
+ggplot(aoe, aes(y = rating)) + 
+  geom_boxplot(fill = "gray", alpha = 0.5) +
+  labs(y = "Rating", title = "Player Rating") +
+  scale_y_continuous(breaks = seq(0, 3200, 800), limits = c(0, 3200), expand = c(0,0)) +
+  theme(axis.line.x = element_blank(),
+        axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        panel.background=element_blank(),
+        axis.line.y = element_line(colour = "black"),
+        plot.title = element_text(hjust = 0.5, vjust = 5),
+        aspect.ratio = 1,
+        plot.margin = unit(rep(1, 4), "cm"))
+
+# Don't worry - there are good pre-built themes! theme_classic(), theme_bw() and 
+# theme_minimal() are all popular choices. There are also several packages out
+# there containing other possible ggplot2 themes - the sky really is the limit
+# here.
+
+# To show the distribution of a variable in separate boxplots:
+aoeSelect <- aoe %>%
+  filter(civ %in% c("Franks", "Teutons", "Chinese"))
+
+# In base R:
+boxplot(aoeSelect$rating ~ aoeSelect$civ, #plot rating by civ
+        frame = F, ylab = "Rating", xlab = "Civ", main = "Player Ratings by Civ")
+
+# In the tidyverse:
+ggplot(aoeSelect, aes(y = rating, x=civ)) + 
+  geom_boxplot(fill = "gray", alpha = 0.5) +
+  labs(y = "Rating", x = "Civlisation", title = "Player Rating") +
+  scale_y_continuous(breaks = seq(0, 3200, 800), limits = c(0, 3200), expand = c(0,0)) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5, vjust = 5),
+        aspect.ratio = 0.8,
+        plot.margin = unit(rep(1, 4), "cm"))
+
+# Note here that it was easier to mix and match a default theme with some
+# extra adjustments of our own
 
 
 
@@ -199,7 +238,7 @@ ggplot(ANES, aes(x = FTM)) + geom_histogram(binwidth = 5)
 
 
 
-## .2.3 density plots ----
+## 2.3 density plots ----
 
 # we can also obtain kernel densities of our data:
 density(ANES$dem) # this function takes our data as input and computes the kernel density
