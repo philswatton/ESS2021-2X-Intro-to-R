@@ -78,7 +78,7 @@ prop.table(table(aoe$civ)) # note that prop.table takes a table as input
 
 
 
-## 1.1. covariance and correlation matrices ----
+## 1.1 Covariance and correlation matrices ----
 ches %>% 
   select(lrecon, eu_position, galtan) %>%
   cor()
@@ -156,7 +156,7 @@ ches %>%
 
 
 
-## 2.1 boxplots ----
+## 2.1 Boxplots ----
 
 # In base R we use the boxplot() function:
 boxplot(aoe$rating)
@@ -220,7 +220,7 @@ ggplot(aoeSelect, aes(y = rating, x=civ)) +
 
 
 
-## 2.2 histograms ----
+## 2.2 Histograms ----
 
 # Plotting histograms is fairly easy in base R:
 hist(ches$eu_position, main = "EU Party Positions", xlab = "Position")
@@ -244,65 +244,80 @@ ggplot(ches, aes(x = eu_position)) +
 
 
 
-## 2.3 density plots ----
+## 2.3 Density plots ----
 
-# we can also obtain kernel densities of our data:
-density(ANES$dem) # this function takes our data as input and computes the kernel density
+# We can also obtain kernel densities of our data:
+density(ches$lrecon) # this function takes our data as input and computes the kernel density
 
-# to plot it:
-plot(density(ANES$dem))
+# To make a density plot in base R:
+plot(density(ches$lrecon))
 
-# again, we can work on its options:
-plot(density(ANES$dem, kernel = "epanechnikov"),
-     frame = FALSE, main = "Kernel density (Epanechnikov)")
-?density
+# In the tidyverse things are, again, simpler:
+ggplot(ches, aes(x = lrecon)) + 
+  geom_density()
 
-# in tidyverse things are, again, simpler:
-ggplot(ANES, aes(x = dem)) + geom_density()
-
+# As before, you can mess around with customising both kinds of plot - but 
+# I suspect you know that by now!
 
 
 
-## 2.4 twoway plots ----
 
-# Suppose now we want to explore two-way relations in our data.
-# for instance the two-way relation between height and weight of baseball players:
-plot(x = baseball$heightinches, y = baseball$weightpounds,
-     frame.plot = FALSE, xlab = "height", ylab = "weight",
-     pch = 20) # pch is an option that selects the shape of dots we want 
+## 2.4 Twoway plots ----
 
-# what if we want to add lines on this plot? We use the abline() function
+# Of course, we often aren't just interested in plotting single variables. We're
+# probably more often interested in two-way relationships. One example might be
+# the relationship between how left-wing a party is and its EU position. Let's
+# focus on the case of the UK to begin with:
+
+chesUK <- ches %>% filter(country == 11)
+
+# To make a scatter plot in base R::
+plot(x = chesUK$lrecon, y = chesUK$eu_position,
+     frame.plot = F, xlab = "Left-Right", ylab = "Anti-Pro EU",
+     pch=20) #pch chooses the style of the points
+
+# We can add lines to the plot with the abline function. For instance, mean lrecon:
 # Maybe we want to plot a line corresponding to the mean height 
-abline(v = mean(baseball$heightinches, na.rm = TRUE), col = "red", lwd = 5) # lwd makes it thicker
+abline(v = mean(chesUK$lrecon, na.rm = TRUE), col = "red", lwd = 2.5) # lwd sets thickness
 
-# Maybe we want to add a regression line to the plot...
-abline(lm(weightpounds ~ heightinches, data = baseball), col = "green")
-# ... but more on this in a bit!
+# We could also add a regression line to the plot:
+abline(lm(lrecon ~ eu_position, data = chesUK), col = "blue", lwd = 2.5)
+# ... we'll talk more about regression in part 04!
 
-# suppose now we want to save this plot. We simply do:
+# To save a base R plot, we use pdf() and dev.off()
 pdf("my_first_plot.pdf") # this creates a pdf file in which we put the following:
-plot(x = baseball$heightinches, y = baseball$weightpounds, frame.plot = FALSE, 
-     xlab = "height", ylab = "weight", pch = 20)
-abline(v = mean(baseball$heightinches, na.rm = TRUE), col = "red", lwd = 2)
-abline(lm(weightpounds ~ heightinches, data = baseball))
+plot(x = chesUK$lrecon, y = chesUK$eu_position,
+     frame.plot = F, xlab = "Left-Right", ylab = "Anti-Pro EU",
+     pch=20) #pch chooses the style of the points
+abline(v = mean(chesUK$lrecon, na.rm = TRUE), col = "red", lwd = 2.5)
+abline(lm(lrecon ~ eu_position, data = chesUK), col = "blue", lwd = 2.5)
 dev.off() # this closes and saves the pdf file.
 
-# what if we wanted to limit our plot to a certain range of the x (or y) axis?
-plot(x = baseball$heightinches, y = baseball$weightpounds, frame.plot = FALSE, 
-     xlab = "height", ylab = "weight", pch = 20,
-     xlim = c(60,75))
 
-# again, tidyverse makes things much easier. Let's re-do all the steps we did before.
-# First, we created a scatter plot. This time, let's save the plot in an object:
-my.plot <- ggplot(baseball, aes(x = heightinches, y = weightpounds)) + geom_point()
-my.plot
 
-# now we want to add the mean height to the plot. It's very easy:
-my.plot <- my.plot + geom_vline(xintercept = mean(baseball$heightinches), color = "red")
-my.plot
+# While we can customise the above to make a nicer plot, it's much easier to 
+# do so in the tidyverse:
 
-# and if we want to add a regression line?
-my.plot <- my.plot + geom_smooth(method = "lm")
+# The basic plot
+ggplot(chesUK, aes(x=lrecon, y=eu_position)) +
+  geom_point() 
+
+# Bells and whistles:
+ggplot(chesUK, aes(x=lrecon, y=eu_position, fill=party)) +
+  geom_point(shape=21, colour="black", size=3) +
+  scale_x_continuous(limits = c(0,10), breaks=seq(0,10,2)) +
+  scale_y_continuous(limits = c(0,10), breaks=seq(0,10,2)) +
+  scale_fill_manual(values = c("Cyan3","Blue4","Green","Red","Orange","Chartreuse4","Yellow","Purple")) +
+  geom_vline(xintercept=mean(chesUK$lrecon), colour="red", size=1) + # this adds the vertical line
+  geom_smooth(aes(group=1), method=lm, fullrange=T, show.legend=F, se=F) + # this adds the regression line
+  labs(y="Anti-Pro EU", x= "Left-Right", fill="Party") +
+  theme_classic() +
+  theme(aspect.ratio = 1)
+
 
 # tidyverse makes it also simpler to save tidyverse plots:
-ggsave(my.plot, filename = "my_first_ggplot.pdf")
+ggsave(filename = "my_first_ggplot.pdf")
+?ggsave #saves the last created plot by default, else specify plot in plot argument
+
+
+
