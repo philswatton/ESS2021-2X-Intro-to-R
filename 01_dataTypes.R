@@ -359,6 +359,9 @@ vec4[1]
 10 == 11
 10 > 4
 10 < 4
+10 > 4 | 10 < 4
+10 > 4 & 10 < 4
+!10 < 4
 
 # so - we have two statements either side, and the expression returns
 # TRUE or FALSE. So far so good. Now, recall the concept of vectorisation -
