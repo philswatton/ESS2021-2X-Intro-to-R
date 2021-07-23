@@ -1,70 +1,145 @@
-# 3) GET SUMMARY STATS AND PLOTS ----
+# Essex Summer School in Social Science Data Analysis
+# 2X Introduction to R
+# Phil Swatton
+# Modified from 1X Introduction to R files by Lorenzo Crippa
+# Sunday 25th July 2021, 11am-5pm BST
+# File 03: Summary statistics and plots
 
-## 3.1 Summary statistics ----
-# let's re-import the ANES dataset
+
 rm(list=ls())
-ANES <- read.dta("anesByState.dta")
+# Before you begin - empty your environment as before. This time, we also want
+# to start with a fresh R session (no packages loaded) to make sure our work is
+# replicable.
 
-# we now want to get some description of our data. The summary() function is our friend in this:
-summary(ANES$poor) # description of a single variable...
-summary(ANES) # ...and of an entire dataset
-summary(ANES[,3:7])
+# Note the important thing - I can go back to file 02 and recreate the
+# data frames I made from the raw data. NONE of the raw data has been
+# overwritten!
 
-# we can also ask for specific information:
-mean(ANES$voteDem) 
-sd(ANES$poor)
-median(ANES$dem)
-min(ANES$year)
-max(ANES$voteDem)
-quantile(ANES$poor, 0.3) # the observation that leaves 30% of the observations to its left
-quantile(ANES$poor, 0.5) # this will be the median of course!
-median(ANES$poor)
-var(ANES$dem) # the variance
-table(ANES$year) # how often does each occurrence appear?
+# To do this, click on Session -> Restart R
 
-# notice what happens here, though:
-mean(ANES$FTM)
-# we get an NA. This is because this variable has missing values. We need to explicitly tell
-# R how to handle these missing data: we want to exclude them from the computation of the mean:
-mean(ANES$FTM, na.rm = TRUE) # remove the NAs!
+# Once this two things are done, go ahead and load the packages:
 
-# we might want to ask R to give us summaries only for observations that satisfy conditions:
-# for instance, give us the mean of FTM only when year is 2004:
-mean(ANES$FTM[ANES$year == 2004], na.rm = T)
 
-# or give us the mean of FTM when year is either 2004 or 2006 or 2008
-mean(ANES$FTM[ANES$year == 2004 | ANES$year == 2006 | ANES$year == 2008], na.rm = T)
+## Packages
+install.packages("psych") # normally I wouldn't include this line in a script, but today we're installing as we go
+library(tidyverse)
+library(readstata13)
+library(psych)
 
-# once again, tidyverse offers us a way of making this simpler:
-mean(ANES$FTM[ANES$year %in% c(2004, 2006, 2008)], na.rm = T)
-# we're keeping FTM observations that correspond to either year 2004, 2006, or 2008, and removing NAs
 
-# or we might want to introduce an "and" condition. For instance, give us the mean of
-# poor when the year is before 2000 and the observation of FTM is not missing
-mean(ANES$poor[ANES$year < 2000 & is.na(ANES$FTM) == FALSE], na.rm = T)
+## Data
+aoe <- read.csv("data/match_players.csv")
+ches <- read.dta13("data/CHES2019V3.dta")
 
-# we might also need information on the covariance or correlation between our data:
-cov(ANES$voteDem, ANES$poor) # covariance
-cor(ANES$voteDem, ANES$poor) # correlation
 
-# and we can also ask for an entire correlation matrix. 
-# For instance the correlation of numeric variables in ANES,
-#  but without the NAs that we know the variable FTM has
-cor(ANES[is.na(ANES$FTM) == FALSE, 3:7]) # we do it this way because cor() has no na.rm option
 
-# if we want to extract significance and pvalues of these correlations (pearson ans spearman tests)
-# we can do:
-cor.test(ANES$voteDem, ANES$poor)
+# 1 Summary statistics ----
 
-# we might also want to try the describe() function in the "psych" package for psychometric analysis:
-install.packages("psych")
-library("psych")
-describe(ANES) 
-?describe # here you get a number of different options you might find interesting:
+# base R's summary function is a good workhorse function for descriptive stats:
+summary(aoe$rating)
 
-describe(ANES[,c(3,4)], skew = FALSE, IQR = TRUE, ranges = FALSE)
+# it can be used for an entire dataset:
+summary(aoe)
+summary(ches)
 
-## 3.2 Basic plots ----
+# we can store summaries like any other object:
+aoeSummary <- summary(aoe)
+class(aoeSummary)
+
+
+# the stats package is installed with base R and doesn't need to be called via
+# the library() function. That means we have functions for most descriptive
+# statistics:
+
+mean(ches$eu_position)
+sd(ches$eu_position)
+var(ches$eu_position)
+median(ches$eu_position)
+min(ches$eu_position)
+max(ches$eu_position)
+quantile(ches$eu_position, 0.3) # the observation that leaves 30% of the observations to its left
+quantile(ches$eu_position, 0.5) # this will be the median
+
+# note one important behaviour of missing data:
+2 + NA
+
+# which means if we use these functions with missing data:
+mean(aoe$rating)
+
+# pay attention to the arguments of these functions:
+?mean
+mean(aoe$rating, na.rm=T) #note we need to explicitly name na.rm as we aren't using the trim argument
+
+
+# some useful functions for categorical data (especially if it's in character form):
+table(aoe$civ)
+prop.table(table(aoe$civ)) # note that prop.table takes a table as input
+
+
+
+
+## 1.1. covariance and correlation matrices ----
+ches %>% 
+  select(lrecon, eu_position, galtan) %>%
+  cor()
+
+ches %>% 
+  select(lrecon, eu_position, galtan) %>%
+  cov()
+
+# note cor uses Pearson's correlation by default:
+?cor
+
+# if you have missing data, you want to set the argument use="complete.obs" to
+# filter for missing data:
+cor(aoe$rating, as.numeric(as.logical(toupper(aoe$winner))), use="complete.obs")
+
+
+
+
+## 1.2 Describe ----
+
+# finally, the psych package includes the describe() and describeBy() functions
+# which are *amazing* for continuous data:
+describe(aoe)
+describeBy(aoe$rating, aoe$team)
+
+# note the *'s next to some variables - this is telling us they were originally
+# characters and were converted to numeric by the function. Some of these
+# stats are probably meaningless!
+
+# to select only numeric variables with dplyr:
+aoe %>% 
+  select_if(is.numeric) %>% #this is one case where you don't want to include the parantheses for the is.numeric function
+  describe()
+
+# we might want to combine filtering from file 02 with these functions:
+describe(aoe[aoe$civ == "Franks",])
+describe(aoe %>% filter(civ == "Franks"))
+
+# there's a lot of room to customise the output:
+describe(aoe, skew = FALSE, IQR = TRUE, ranges = FALSE)
+
+
+# Let's say we want to look at some variables in CHES for the UK, Germany, and France.
+# From the codebook, the codes for these countries are 11, 3, and 6 respectively.
+
+# We could do this:
+ches %>%
+  filter(country == 11 | country == 3 | country == 6) %>%
+  select(country, lrecon, eu_position) %>%
+  describeBy(., .$country) #if you want to pipe into more than one slot or a slot other than the first, use the full stop
+
+# But the %in% operator can be VERY useful for larger OR expressions:
+ches %>%
+  filter(country %in% c(3,6,11)) %>%
+  select(country, lrecon, eu_position) %>%
+  describeBy(., .$country)
+
+
+
+
+# 2 Plotting ----
 
 # we now want to obtain some plots about our data. We'll see how to:
 # 1) obtain boxplots
@@ -75,7 +150,7 @@ describe(ANES[,c(3,4)], skew = FALSE, IQR = TRUE, ranges = FALSE)
 # we'll see how base R obtains plots and how tidyverse 
 # does (using the package ggplot2, part of the suite)
 
-### 3.2.1 boxplots ----
+## 2.1 boxplots ----
 
 # to obtain it we simply run:
 boxplot(ANES$white)
@@ -104,7 +179,9 @@ ggplot(selection, aes(y = heightinches, x = team)) +
   labs(y="Height (Inches)")
 
 
-### 3.2.2 histograms ----
+
+
+## 2.2 histograms ----
 
 # plotting histograms is also very easy and similar to obtaining boxplots:
 hist(ANES$FTM, main = "Histogram of FTM", xlab = "FTM")
@@ -119,7 +196,10 @@ ggplot(ANES, aes(x = FTM)) + geom_histogram()
 # we can intervene on the bins size:
 ggplot(ANES, aes(x = FTM)) + geom_histogram(binwidth = 5)
 
-### 3.2.3 density plots ----
+
+
+
+## .2.3 density plots ----
 
 # we can also obtain kernel densities of our data:
 density(ANES$dem) # this function takes our data as input and computes the kernel density
@@ -135,7 +215,10 @@ plot(density(ANES$dem, kernel = "epanechnikov"),
 # in tidyverse things are, again, simpler:
 ggplot(ANES, aes(x = dem)) + geom_density()
 
-### 3.2.4 twoway plots ----
+
+
+
+## 2.4 twoway plots ----
 
 # Suppose now we want to explore two-way relations in our data.
 # for instance the two-way relation between height and weight of baseball players:
