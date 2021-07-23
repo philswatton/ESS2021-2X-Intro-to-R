@@ -36,9 +36,10 @@
 # and others can replicate your steps
 
 # Some other useful keyboard shortcuts in RStudio:
-# ctrl+z (cmd+z for Mac): undo
-# ctrl+s (cmd+s for Mac): save
-# ctrl+shift+c (cmd+shift+s for Mac): comment/uncomment current/highlighted lines
+# ctrl+z (cmd+z for mac): undo
+# ctrl+s (cmd+s for mac): save
+# ctrl+shift+c (cmd+shift+s for mac): comment/uncomment current/highlighted lines
+# crtl+f (cmd+f for mac - I think): search and replace. VERY useful, but be CAREFUL not to mess up your code!
 
 
 
