@@ -94,7 +94,7 @@ head(aoe)
 
 
 
-## 1.4 Other file types
+## 1.4 Other file types ----
 
 # Often, you won't find files in a csv format. One format that's very common
 # (at least in political science) is STATA's dta file format. For this, we need
@@ -137,7 +137,7 @@ install.packages(c("foreign", "readxl"))
 
 # Foreign is a good workhorse package for reading in data. It has read.dta (for
 # STATA versions prior to 13 - probably more common that later dta files) and
-# read.spss among other functions.
+# read.spss() among other functions.
 
 # readxl is the package you want for reading in excel files - read_xls() and
 # read_xlsx() depending on your need.
@@ -150,54 +150,119 @@ install.packages(c("foreign", "readxl"))
 
 # 2 Manage datasets ----
 
-# Database management (dropping observations and vars, sorting our data, etc.) 
-# can be done using the basic R language. 
-# Nevertheless, a suite of packages has also been developed to write code in R in a much
-# more natural syntax. The suite is called tidyverse. We can install it by running:
+# In part one of this class, we learned the basics of subsetting and recoding
+# with the base R square brackets.
+
+# However, there's a suite of packages designed to help do the same thing with
+# code that's much easier for a human to read. This suite is called the tidyverse
+# and can be installed as a single package:
+
 install.packages("tidyverse")
-library("tidyverse")
-# but you can also load its packages individually, like:
-library("dplyr")
+library(tidyverse)
 
-# in what follows, you'll see code for managing datasets in base R, and next you'll see the
-# (more intuitive) tidyverse version of the same operations. It's important to know both
+# You can also load the packages individually if you wanted:
+# library(dyplr)
 
-# suppose now we want to drop from our baseball data all observations that refer to the CLE team
-# (no offense to its fans). Doing it in base R would be:
-baseball.no.CLE <- baseball[baseball$team != "CLE", ]
-# which means: put in the object "baseball" the object "baseball" itself, but only the rows
-# that have baseball$team different from "CLE". Keep all the columns.
 
-# Suppose now we want to get rid of all observations that are not for New York Yankees (NYY) and also
-# we want to drop the column "name". Yet, we don't want to overwrite the "baseball" object
-# because we might need the information we're dropping later. We can do the following:
-baseball.2 <- baseball[baseball$team == "NYY", 2:4]
 
-# create a new object called "baseball.2" where we put the object "baseball", but only the
-# rows that have baseball$team equal to NYY and the columns from the 2nd to the 4th.
 
-# notice that the condition is imposed using ==, and not = (which is used to assign values)
+## 2.1 Filter ----
 
-# these operations are made smoother by tidverse Let's do something similar on ANES:
-# Remove all observations from the year 2000, then remove the variable turnout:
-ANES <- filter(ANES, # what is your data frame? 
-               year != 2000) # the condition you impose
-ANES <- select(ANES, 
-               -turnout) # keep everything BUT the variable named "turnout"
+# before trying to recode or filter, it can be useful to get a sense of the
+# variable(s) we want to recode:
 
-# now suppose we want to sort observations in our ANES dataset based on state, then year.
-# We can do it by:
-ANES[order(ANES[,2], ANES[,1]),]
-# by doing this we have taken ANES and we have asked R to reorder its rows first based on the
-# second column (state), then by its first column (year). Notice that this time we have not
-# saved the data frame obtained into an object!
+unique(ches$country) # see the unqiue values
+table(ches$country) # get a frequency table
+# note these two aren't so useful for numerical data - we'll see some more
+# for this in a bit
 
-# Another useful function is unique(). It tells us what values a vector takes:
-unique(ANES$year) # all possible years in the ANES dataset
+# If you read the CHES documentation, you'll see that country 11 is GB.
 
-# we might want to have it sorted:
-sort(unique(ANES$year)) # years from 1952 to 2008 by 2-year distance. 
-# We don't have 2000 as we dropped it early on.
+# In base R, if we only wanted to look at the GB CHES data, we'd filter it
+# like this:
+ches[ches$country == 11,]
+
+# We can use the dplyr filter() function to do the same:
+filter(ches, country == 11)
+
+
+
+
+## 2.2 Select ----
+
+# before choosing variables, it can be good to get a sense of what's in
+# our dataframe:
+ncol(ches)
+names(ches)
+# though note the best way to get on top of these things is to read the 
+# documentation!
+
+# If we wanted to keep a select of variables, we might do it like so in base R:
+ches[,c("party", "lrecon", "eu_position", "galtan")]
+
+# Alternatively, we can use the dplyr select function:
+select(ches, party, lrecon, eu_position, galtan)
+
+
+
+
+## 2.3 Both ----
+
+# If we wanted to keep those variables for the GB parties, we could do the
+# following in base R: 
+ches[ches$country == 11, c("party", "lrecon", "eu_position", "galtan")]
+
+
+# In the tidyverse, we could wrap our functions...
+select(filter(ches, country == 11), party, lrecon, eu_position, galtan)
+
+# But the tidyverse includes a VERY useful operator called the 'pipe'. This takes
+# the output of your function, and puts it in the FIRST SLOT of the next function:
+
+ches %>%
+  filter(country == 11) %>%
+  select(party, lrecon, eu_position, galtan)
+
+# This code doesn't run ANY differently to the above, but it's much easier for a
+# human to read.
+# To assign the final output:
+
+chesGB <- ches %>%
+  filter(country == 11) %>%
+  select(party, lrecon, eu_position, galtan)
+chesGB
+
+# You don't have to use the pipe - but it's very, very nice for combining dplyr
+# functions (and chaining others), and helps keep your code readable.
+
+# Note also that I've used a different object rather than overwriting ches -
+# in general to let yourself have room to make mistakes without needing to redo
+# everything it's a good idea not to overwrite objects in your environment
+
+
+
+
+## 2.4 Mutate ----
+
+# If we wanted to add a new variable to our data frame in base R:
+chesGB$lrSquare <- chesGB$lrecon^2
+
+# In the tidyverse, we can use the 'mutate' function:
+chesGB %>%
+  mutate(euSquare = eu_position^2,
+         galtanSquare = galtan^2,
+         sumSquare = lrSquare + euSquare + galtanSquare)
+
+# This lets us make lots of variables in one go, rather than writing a new
+# assignment each time
+
+# It also lets us avoid the need to keep remembering the $ operator
+
+
+
+
+## 2.5 ifelse() and case_when() ----
+
 
 # We can also add variables to our data frames. What if we wanted to add the squared value 
 # of "poor" in the ANES data frame? In base R this is done by doing:
