@@ -516,7 +516,7 @@ rm(list = ls())
 
 
 
-## 4.2 matrixes ----
+## 4.2 matrices ----
 
 #	               | Homogeneous |	Heterogeneous |
 # ---------------+-------------+----------------+
