@@ -166,7 +166,7 @@ library(tidyverse)
 
 
 
-## 2.1 Filter ----
+## 2.1 filter ----
 
 # before trying to recode or filter, it can be useful to get a sense of the
 # variable(s) we want to recode:
@@ -188,7 +188,7 @@ filter(ches, country == 11)
 
 
 
-## 2.2 Select ----
+## 2.2 select ----
 
 # before choosing variables, it can be good to get a sense of what's in
 # our dataframe:
@@ -242,19 +242,20 @@ chesGB
 
 
 
-## 2.4 Mutate ----
+## 2.4 mutate ----
 
 # If we wanted to add a new variable to our data frame in base R:
 chesGB$lrSquare <- chesGB$lrecon^2
 
 # In the tidyverse, we can use the 'mutate' function:
-chesGB %>%
+chesGB <- chesGB %>%
   mutate(euSquare = eu_position^2,
          galtanSquare = galtan^2,
          sumSquare = lrSquare + euSquare + galtanSquare)
 
 # This lets us make lots of variables in one go, rather than writing a new
-# assignment each time
+# assignment each time. Note we can use the new variables within the same
+# command!
 
 # It also lets us avoid the need to keep remembering the $ operator
 
@@ -263,39 +264,49 @@ chesGB %>%
 
 ## 2.5 ifelse() and case_when() ----
 
+# It's often the case that we want to conditionally recode a variable.
 
-# We can also add variables to our data frames. What if we wanted to add the squared value 
-# of "poor" in the ANES data frame? In base R this is done by doing:
-ANES$new.var <- ANES$poor^2
+# Here, base R's ifelse() and the tidyverse's really shine.
 
-# we can also do it in tidyverse by doing:
-ANES <- mutate(ANES,
-               new.var = poor^2)
+# Let's say we want to createa binary variable based on the 'ranking' variable
+# in the aoe dataset, where above 2000 are 1, and the rest are 0.
 
-# ifelse() is a function that is very useful to know. If its "test" argument (a condition)
-# is verified, it does what the "yes" argument says. Otherwise, it executes the "no" argument.
-# For instance, in ANES we might want to have a variable that takes value 0 
-# if the year is before 2000, and 1 otherwise. We can do it like this:
-ANES$indicator <- ifelse(test = ANES$year >= 2000, yes = 1, no = 0)
-unique(ANES$indicator)
+# We could do something like this:
+ifelse(aoe$rating > 2000, yes = 1, no = 0)
 
-# ifelse() is very handy but you can imagine it can make things rather complicated when you
-# want to chain conditions like:
-ANES$indicator.2 <- ifelse(test = ANES$year >= 2000, yes = 1,
-                           no = ifelse(test = ANES$year >= 1980, yes = 2, no = 0))
-# if the first condition is met, it gives a value of 1. If it is not met, this opens up a 
-# new condition. If that condition is met, it gives a value of 2, otherwise a value of 0. 
+# Notice how the function works:
+?ifelse
 
-# this gets extremely messy when you already have something like four conditions 
-# (four ifelse() functions). To avoid the problem, we can use the tidyverse function case_when():
-ANES$indicator.2 <- case_when(ANES$year >= 2000 ~ 1,
-                              ANES$year >= 1980 ~ 2,
-                              TRUE ~ 0)
+# We give a logical test, what to return if that test is TRUE, and what to return
+# if the test is FALSE.
 
-# or you can do all of it in tidyverse and do:
-ANES <- mutate(ANES,
-               indicator.2 = case_when(ANES$year >= 2000 ~ 1,
-                                       ANES$year >= 1980 ~ 2,
-                                       TRUE ~ 0))
 
-# Time for exercises!
+# What happens if we want to change this up a bit - those over 2000 are 2, those
+# under that but over 1000 are 1, and the rest are 0.
+
+# We can 'chain' our ifelse() statements:
+
+ifelse(aoe$rating > 2000, yes = 2,
+       no = ifelse(aoe$rating > 1000, yes = 1, no = 0))
+
+
+# As you can imagine, this can start to get messy.
+
+# Once again, the tidyverse has a function that helps us tidy this up a bit -
+# case_when:
+?case_when
+
+# the documentation is a little unintuitive, but here's how it works:
+case_when(aoe$rating > 2000 ~ 2,
+          aoe$rating > 1000 ~ 1,
+          !is.na(aoe$rating) ~ 0) #notice we need to be explicit about dealing with missing values here
+
+# we can mix it with mutate() to make it even easier to read and write:
+aoe %>%
+  mutate(test = case_when(rating > 2000 ~ 2,
+                          rating > 1000 ~ 1,
+                          !is.na(rating) ~ 0))
+
+
+# Notice importantly that this STILL behaves like an ifelse() chain - anything
+# that passes the first test will not go onto the second, and so on.
