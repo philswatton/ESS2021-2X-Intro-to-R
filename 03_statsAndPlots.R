@@ -315,7 +315,7 @@ ggplot(chesUK, aes(x=lrecon, y=eu_position, fill=party)) +
   theme(aspect.ratio = 1)
 
 
-# tidyverse makes it also simpler to save tidyverse plots:
+# It's much simpler to save plots in the tidyverse:
 ggsave(filename = "my_first_ggplot.pdf")
 ?ggsave #saves the last created plot by default, else specify plot in plot argument
 
