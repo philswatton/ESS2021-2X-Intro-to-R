@@ -222,18 +222,24 @@ ggplot(aoeSelect, aes(y = rating, x=civ)) +
 
 ## 2.2 histograms ----
 
-# plotting histograms is also very easy and similar to obtaining boxplots:
-hist(ANES$FTM, main = "Histogram of FTM", xlab = "FTM")
+# Plotting histograms is fairly easy in base R:
+hist(ches$eu_position, main = "EU Party Positions", xlab = "Position")
 
-# and we can also intervene in the plot with options:
-hist(ANES$FTM, main = "Histogram of FTM", xlab = "FTM", probability = TRUE) # to have probabilities
-?hist
+# We can ask for probability densities instead of frequencies:
+hist(ches$eu_position, main = "EU Party Positions", xlab = "Position", probability = TRUE) # to have probabilities
 
-# again, in tidyverse:
-ggplot(ANES, aes(x = FTM)) + geom_histogram()
 
-# we can intervene on the bins size:
-ggplot(ANES, aes(x = FTM)) + geom_histogram(binwidth = 5)
+# In the tidyverse:
+ggplot(ches, aes(x = eu_position)) + 
+  geom_histogram()
+
+# With more details:
+ggplot(ches, aes(x = eu_position)) + 
+  geom_histogram(binwidth = 1, fill="purple4", alpha=0.8, colour="black") +
+  scale_y_continuous(breaks = seq(0,100,20), limits=c(0,100), expand=c(0,0)) +
+  scale_x_continuous(breaks=seq(0,10,2), limits=c(0,10), expand=c(0,0)) +
+  labs(x = "EU Position", y = "Count", title = "CHES Party EU Positions") +
+  theme_classic()
 
 
 
