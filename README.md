@@ -16,7 +16,7 @@ The class covers the basics of getting started in R, including using scripts, us
 ```r
 aoe <- read.csv("data/match_players.csv")
 set.seed(42)
-aoe <- aoe[rbinom(nrow(aoe), 1, 0.01),]
+aoe <- aoe[as.logical(rbinom(nrow(aoe), 1, 0.01)),]
 write.csv(aoe, "data/match_players.csv")
 ```
 
