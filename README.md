@@ -25,6 +25,11 @@ write.csv(aoe, "data/match_players.csv")
   - Source: https://www.chesdata.eu/our-surveys
   - Dataset not included in repo as no clear licencing
 
+- avocado.csv
+  - Dataset containing data on avocado prices
+  - Source: https://www.kaggle.com/neuromusic/avocado-prices
+  - Licence: https://opendatacommons.org/licenses/odbl/1-0/
+
 
 ## Resources
 
