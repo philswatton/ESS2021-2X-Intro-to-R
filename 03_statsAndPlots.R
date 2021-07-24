@@ -33,6 +33,7 @@ ches <- read.dta13("data/CHES2019V3.dta")
 
 
 
+
 # 1 Summary statistics ----
 
 # base R's summary function is a good workhorse function for descriptive stats:
