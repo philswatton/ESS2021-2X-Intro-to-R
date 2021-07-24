@@ -1,29 +1,65 @@
-# 4) RUN BASIC STATISTICAL ANALYSES ----
-
-## 4.1 T-tests ----
-
-# suppose you want to run a test to see if the population mean 
-# of a random variable is distinguishable from 0 based on your data:
-t.test(ANES$poor) # by defaul it's a two-tailed t-test with null-value = 0
-
-# you can also test if the true value is equal to other values...
-t.test(ANES$FTM, mu = 60)
+# Essex Summer School in Social Science Data Analysis
+# 2X Introduction to R
+# Phil Swatton
+# Modified from 1X Introduction to R files by Lorenzo Crippa
+# Sunday 25th July 2021, 11am-5pm BST
+# File 04: statistical tests, OLS, generalised linear models
 
 
-# ...and you can ask the test be one-sided:
-t.test(ANES$FTM, mu = 60, alternative = "less")
-t.test(ANES$FTM, mu = 60, alternative = "greater")
+# Before proceeding: clear your environment, restart R
+rm(list=ls())
 
-# you can also run difference-in-means tests.
-# Suppose you want to test if the mean height of players in the NYY team 
-# is different from the mean height of players in the MIN team:
-t.test(x = baseball$heightinches[baseball$team == "NYY"],
-       y = baseball$heightinches[baseball$team == "MIN"])
-# they are! Players in the Yankees are taller on average.
 
-## 4.2 Statistical models ----
+## Packages
+install.packages(c("stargazer", "texreg"))
+library(tidyverse)
+library(stargazer)
+library(texreg)
 
-### 4.2.1 linear models ----
+
+## Data
+avocado <- read.csv("data/avocado.csv")
+simpsons <- read.csv("data/simpsons_episodes.csv")
+
+
+
+
+## 1 T-tests ----
+
+# As you may know, the reason why millennials can't afford a home is because
+# they buy too much avocado toast. We're going to perform a t-test to get a
+# sense of the mean price so that millennials can make better spending decisions.
+
+# To test whether the mean avocado price is different from 0, we can use
+# the t.test function:
+t.test(avocado$AveragePrice) # by default a two-tailed t-test with null value = 0
+
+# We can also test to see whether the avocado price is the same as other values,
+# like the median price of a house in the US:
+t.test(avocado$AveragePrice, mu = 269039) #sets the null to 269039, which according to a brief google is the median house price in the US
+
+# We can perform one-sided tests:
+t.test(avocado$AveragePrice, mu = 269039, alternative = "less")
+t.test(avocado$AveragePrice, mu = 269039, alternative = "greater")
+
+# We can also perform difference in means tests. We may for instance want
+# to test to see whether conventional and organic avocados have the same mean
+# price, so we can advise millennials looking to buy a house on whether avoiding
+# organic will help them save up.
+
+t.test(x = avocado$AveragePrice[avocado$type == "conventional"],
+       y = avocado$AveragePrice[avocado$type == "organic"])
+
+# Conventional avocados are cheaper! Maybe this is the secret to millennial
+# home ownership...
+
+
+
+
+# 2 Statistical models ----
+
+# We're now going to switch things up and look at a dataset of 
+
 
 # suppose now we want to estimate a linear model using OLS. 
 # To do that we first import a dataset from an article by David Card (1993) on NBER:
@@ -53,9 +89,7 @@ summary(model3)
 # neat regression tables out there. The choice between them depends mostly on the type
 # of models that they can support. Two equally good choices are stargazer and texreg.
 # We'll use stargazer today:
-install.packages(c("stargazer", "texreg"))
-library("stargazer")
-library("texreg")
+
 
 # let's see how stargazer works
 stargazer(model1, model2, model3, type = "text",
