@@ -30,6 +30,10 @@ write.csv(aoe, "data/match_players.csv")
   - Source: https://www.kaggle.com/neuromusic/avocado-prices
   - Licence: https://opendatacommons.org/licenses/odbl/1-0/
 
+- bestsellers with categories.csv
+  - Dataset containing data on Amazon bestsellers
+  - Source: https://www.kaggle.com/sootersaalu/amazon-top-50-bestselling-books-2009-2019
+
 
 ## Resources
 
