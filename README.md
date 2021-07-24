@@ -33,6 +33,7 @@ write.csv(aoe, "data/match_players.csv")
 - bestsellers with categories.csv
   - Dataset containing data on Amazon bestsellers
   - Source: https://www.kaggle.com/sootersaalu/amazon-top-50-bestselling-books-2009-2019
+  - Licence: https://creativecommons.org/publicdomain/zero/1.0/
 
 
 ## Resources
