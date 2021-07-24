@@ -36,6 +36,8 @@ ches <- read.dta13("data/CHES2019V3.dta")
 
 # 1 Summary statistics ----
 
+## 1.1. Summary statistics ----
+
 # base R's summary function is a good workhorse function for descriptive stats:
 summary(aoe$rating)
 
@@ -79,7 +81,7 @@ prop.table(table(aoe$civ)) # note that prop.table takes a table as input
 
 
 
-## 1.1 Covariance and correlation matrices ----
+## 1.2 Covariance and correlation matrices ----
 ches %>% 
   select(lrecon, eu_position, galtan) %>%
   cor()
@@ -98,7 +100,7 @@ cor(aoe$rating, as.numeric(as.logical(toupper(aoe$winner))), use="complete.obs")
 
 
 
-## 1.2 Describe ----
+## 1.3 Describe ----
 
 # finally, the psych package includes the describe() and describeBy() functions
 # which are *amazing* for continuous data:
@@ -321,4 +323,27 @@ ggsave(filename = "my_first_ggplot.pdf")
 ?ggsave #saves the last created plot by default, else specify plot in plot argument
 
 
+
+
+# Exercises ----
+
+# 1) Get a summary of the 'redistribution' variable from the CHES dataset. Put
+# the same variable through Psych's describe() function
+
+
+# 2) Describe the redistribution variable by party for the German (country = 3)
+# data in CHES. Feel free to use any mix of base R or tidyverse you want.
+
+
+# 3) Read in the simpsons_episodes.csv file from the 'data' folder. Make
+# a boxplot of the IMDB ratings variable in base R.
+
+
+# 4) Make a scatter plot of IMDB ratings and season. Store the plot in an object.
+
+
+# 5) Add a theme and a regression line to the object you just made - so if your
+# object is called myPlot, myPlot + theme() will for instance work. I.e. you
+# can keep adding to ggplots after you've stored them in an object! (note that
+# this won't overwrite the object unless you assign it)
 

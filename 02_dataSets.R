@@ -13,7 +13,7 @@
 ## 1.1 Clearing the environment ----
 
 # Before we begin, let's make sure to clear our global environment. We can do
-# this eithe with the following line of code:
+# this either with the following line of code:
 
 rm(list = ls())
 
@@ -310,3 +310,32 @@ aoe %>%
 
 # Notice importantly that this STILL behaves like an ifelse() chain - anything
 # that passes the first test will not go onto the second, and so on.
+
+
+
+
+# Exercises ----
+
+# 1) read in the simpsons_episodes.csv file from the 'data' folder and store it in
+# an object. Take a moment to explore it (hint - names and str will be useful
+# here)
+
+
+# 2) make a vector denoting whether the IMBD rating for an episode is above 8.
+# try to do this using both base R and the tidyverse.
+
+
+# 3) Filter for the first ten season and select, IMDB ratings, episode id, season
+# number, title, and view number. Try to do it with both base R and the tidyverse.
+# Store the output in a new object.
+
+
+# 4) In this object, create a new variable showing the rating per views. Try doing
+# this with both base R and the tidyverse.
+
+
+# 5) Check out the write.csv function. Save the data frame you've ended up with
+# after question 4 in the 'data' folder UNDER A DIFFERENT NAME! For example,
+# simpsons10.csv.
+?write.csv
+

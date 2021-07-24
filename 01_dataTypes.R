@@ -531,21 +531,6 @@ is.ordered(sizeFac) #tests whether a factor is ordered
 
 
 
-
-# look at our environment, on the right. Now we have quite some stuff in it and we
-# might want to do some cleaning. The rm() function removes objects:
-rm(a, b, a.string.vector)
-# or maybe we want to remove everything:
-rm(list = ls())
-
-# it's always safest to start your R script clearing everything, so 
-# that line of code should always be on top of your project.
-
-
-
-
-
-
 ## 4.2 matrices ----
 
 #	               | Homogeneous |	Heterogeneous |
@@ -642,6 +627,10 @@ mydf <- data.frame(
   var3 = c(1, -4, 2, 4.2, 5.3333, 1/9, 7.5, 0.000, 1-12, sqrt(2)))
 mydf
 
+# If putting named objects in, you don't have to (but can) name them:
+mydf2 <- data.frame(vec1, vec4)
+mydf2
+
 
 # A brief note on distributions
 ?rnorm # there are lots of functions for distributions in r
@@ -662,6 +651,9 @@ mydf[2,2] # second row, second column
 # if we ignore the comma, numbers will pull out columns:
 mydf[2]
 
+# note we can also use variable names in the brackets:
+mydf["var1"]
+
 # However, something important to understand is heterogenous data structures
 # have more complex subsetting because they store data of different types.
 
@@ -671,6 +663,14 @@ mydf[[2]]
 is.data.frame(mydf[2]) #this is a data frame with one column
 is.data.frame(mydf[[2]]) #this is a vector
 is.atomic(mydf[[2]])
+is.atomic(mydf[["var1"]])
+
+# In short - just square brackets on its own returns an object of the same
+# type as before (data frame). Doubling up pulls out the actual vector.
+
+# Importantly, the doubled-up square bracketes will only work on *one* vector
+# at a time!
+
 
 # importantly, we can access variables by their name using the dollar sign $:
 mydf$var2
@@ -683,6 +683,9 @@ mydf$var1 <- replicate(10, "hello, world!")
 mydf$var1
 mydf$var1[5] <- "banana bread"
 mydf$var1
+
+# we can also add new variables:
+mydf$var4 <- 10:1 #this works in reverse!
 
 
 
@@ -752,6 +755,35 @@ is.list(mydf)
 # as.matrix()
 # as.data.frame()
 # as.list()
+
+
+
+
+# Exercises ----
+
+# 1) Create a vector of even numbers ranging from 2 to 100 and store it in
+# an object
+
+
+
+# 2) Create another vector ranging from 1 to 50 and store it in an object
+
+
+
+# 3) Run the below lines of code. Put the 'binary' vector along with the 
+# two vectors you just made in a data frame and store it in an object.
+set.seed(42)
+binary <- rbinom(50, 1, 0.5)
+
+
+
+# 4) Filter the data frame you just made for rows where the binary variable is
+# equal to 1. Store the output in a new object
+
+
+
+# 5) Pull the first vector you made in question 1 out of the object from question 4. 
+# Try doing this with both the $ operator and doubled-up square brackets [[]]
 
 
 
