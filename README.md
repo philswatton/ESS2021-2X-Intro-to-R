@@ -35,6 +35,11 @@ write.csv(aoe, "data/match_players.csv")
   - Source: https://www.kaggle.com/sootersaalu/amazon-top-50-bestselling-books-2009-2019
   - Licence: https://creativecommons.org/publicdomain/zero/1.0/
 
+- simpsons_episodes.csv
+  - Dataset containing data on Simpsons episodes
+  - Source: https://www.kaggle.com/prashant111/the-simpsons-dataset
+  - Licence: no licence listed
+
 
 ## Resources
 
