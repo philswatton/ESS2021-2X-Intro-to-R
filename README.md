@@ -23,7 +23,7 @@ write.csv(aoe, "data/match_players.csv")
 - CHES2019V3.dta
   - Chapel Hill Expert Survey 2019
   - Source: https://www.chesdata.eu/our-surveys
-  - Dataset not included in repo as no clear licencing
+  - Dataset not included in repo but accessible at above link
 
 - avocado.csv
   - Dataset containing data on avocado prices
