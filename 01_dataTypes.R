@@ -29,7 +29,7 @@
 
 # Note that running lines with ctrl+enter/cmd+enter/clicking 'run' skips comments:
 2 * 10
-# this will be ignored!
+# this line (32) will be ignored and the next line (33) run!
 2 / 10
 
 # ALWAYS (with one exception) do your work in R files - this ensures that you
@@ -395,6 +395,32 @@ is.atomic(1:10)
 
 
 
+# One last thing - notice the numbers by the side? What do you think they mean?
+100:200
+
+# They show the position of the first number in the vector. So 129 is the 30th
+# item in the vector!
+
+# Notice that when we output just one number, it still has the number:
+100
+
+# A useful fiction we're working with is that we put data inside vectors. And
+# you should keep that fiction - it's helpful for wrapping your mind around R.
+is.atomic(100)
+
+# BUT - it's also good to know it's a fiction. Remember the sqrt() function
+# from earlier? Let's look at the documentation again:
+
+?sqrt
+
+# Notice that the input says it expects a vector or array, rather than just
+# a number. That's because like most functions it's vectorised! Hopefully
+# this won't confuse you *too much*, but will help with understanding some
+# of R's documentation (which can be notoriously difficult at first)
+
+
+
+
 
 ### 4.1.3 Recoding ----
 
@@ -636,7 +662,10 @@ mydf[2,2] # second row, second column
 # if we ignore the comma, numbers will pull out columns:
 mydf[2]
 
-# though notice something important here:
+# However, something important to understand is heterogenous data structures
+# have more complex subsetting because they store data of different types.
+
+# Pay attention to all of these outputs:
 mydf[2]
 mydf[[2]]
 is.data.frame(mydf[2]) #this is a data frame with one column
@@ -679,7 +708,7 @@ mydf$var1
 myList <- list(1, "banana", TRUE, mydf, 1:20)
 myList
 
-myList2 <- list(1:11, myList)
+myList2 <- list(index = 1:11, anotherList = myList)
 myList2
 
 
@@ -695,6 +724,11 @@ length(myList[5])
 # get to the object inside
 is.list(myList[[5]])
 length(myList[[5]])
+
+# Also similar to data frames, if the stuff inside our list is named, we
+# can pull it out by name using the $ operator:
+myList2$index
+myList2$anotherList
 
 
 # in fact, here's an 'under the hood' R secret: data frames are really just
