@@ -4,6 +4,10 @@ This is a repository for the class files I used in teaching the class 2X Introdu
 
 The class covers the basics of getting started in R, including using scripts, using RStudio, using R projects to set the file path for a project, data types, R's data structures, importing data, managing datasets with dplyr, and some basic statistical tests and models.
 
+Since this class is for a 6-hour crash-course, the emphasis is on covering enough ground that students can read helpfiles, stackexchange threads, complete other ESS courses, etc. To that end a lot of code is offered with a lot of comments covering both the basics of base R and the tidyverse.
+
+The scripts are written in such a way as to be followed in order. Some modifications were made during the class - either due errors in the originals or more often due to student questions. These modified scripts are included in the 'updated_scripts' folder. Files numbering 01 to 04 are the original scripts. The data folder contains all datasets expect the Chapel Hill Expert Survey (see below). The solutions folder contains code solutions for the exercises at the end of each file.
+
 
 ## Data
 
